@@ -1,0 +1,59 @@
+<!-- 
+/*
+ * Copyright 2017 Software AG
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ -->
+ 
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>SkyProfiler - Login</title>
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-notification/0.2.0/angular-ui-notification.css"></link>
+        <link rel="stylesheet" type="text/css" href="css/skyprofiler.css"></link>
+    </head>
+    
+    <body ng-app="SkyProfilerApp" ng-controller="LoginController">
+        <div class="sag-web-component sag-login-page">
+            <img class="product-logo" src="images/logo.png" alt="Product Logo" />
+            <div class="sag-login-container">
+                <div class="sag-login-panel">
+                    <div class="welcome-space-default">
+                        <div class="row welcome-text" aria-label="WELCOME">WELCOME</div>
+                        <div class="row login-text" aria-label="PLEASE LOGIN">PLEASE LOGIN</div>
+                    </div>
+                    <form>
+                        <div class="inner-addon left-addon">
+                            <input title="Username" type="text" class="sag-login-txt " placeholder="Username" ng-model="username" />
+                            <span class="sag-ico_user_up"></span>
+                        </div>
+                        <div class="inner-addon left-addon">
+                            <input title="Password" type="password" class="sag-login-txt " placeholder="Password" ng-model="password" />
+                            <span class="sag-ico_password_active"></span>
+                        </div>
+                        <div style="margin-top: 30px;">
+                            <input type="submit" class="sag-btn sag-login-btn" value="Log in" ng-click="login(username, password)"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-notification/0.2.0/angular-ui-notification.min.js"></script>
+        <script src="js/login.js"></script>
+    </body>
+</html>

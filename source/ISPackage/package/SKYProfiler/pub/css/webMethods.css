@@ -1,0 +1,843 @@
+/*
+ * Copyright 2017 Software AG
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*************************************************************************************************************************
+ top area (top.dsp)
+
+
+--------------------------------------------------------------------------------------------------------------------------
+ menu.dsp#menuframe  | body#contentframe                                                                   
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+                     |                                                                                                    
+ ************************************************************************************************************************/
+
+html {
+    border: none;
+    border-collapse: collapse;
+}
+
+th, td, body, input, p, textarea, select {
+    font-family: "Arial", "Helvetica";
+    font-size: 11px;
+    background-color: #fff;
+}
+
+td, body {
+    padding: 0px;
+}
+
+body {
+    padding-left: 4px;
+    padding-top: 4px;
+    color: black;
+    background-color: #fff;
+    scrollbar-face-color: #D8D8D8;
+    scrollbar-arrow-color: #686868;
+    scrollbar-track-color: #E9E9E9;
+    scrollbar-highlight-color: #E3E3E3;
+    scrollbar-3dlight-color: #8B8B8B;
+    scrollbar-shadow-color: #C3C3C3;
+    scrollbar-darkshadow-color: #7A7A7A;
+}
+
+ul {
+    margin-top: 8px;
+    margin-left: 0;
+}
+
+li {
+    margin-top: 8px;
+}
+
+li a {
+    color: #0D10FB;
+}
+
+li a:hover {
+    color: blue;
+    text-decoration: bold;
+}
+
+table {
+    border: 0;
+}
+
+.menu {
+    padding: 0px;
+    background-color: #fff;
+    border: none;
+    border-collapse: collapse;
+    scrollbar-face-color: #7B8EBD;
+    scrollbar-highlight-color: #7F91BF;
+    scrollbar-shadow-color: #455889;
+    scrollbar-darkshadow-color: #5C73AE;
+    scrollbar-track-color: #5177A1;
+    scrollbar-3dlight-color: #97A6CB;
+    scrollbar-arrow-color: white;
+}
+
+.keymessage, .keymessage a {
+    font-weight: bold;
+    color: white;
+    background-color: #C00000;
+}
+
+.keymessage {
+    border: 4px solid white;
+}
+
+.message {
+    font-family: "Tahoma", "Courier", "Courier New";
+    padding: 10px;
+    font-weight: normal;
+    text-align: left;
+    letter-spacing: 1px;
+    background-color: #cae2ee;
+    color: #2e2f30;
+    border: 2px solid #ccc;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.menusection {
+    background-color: #e9e9e9;
+    color: #0c3b60;
+    padding-left: 5px;
+    padding-right: 15px;
+    height: 2.5em;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.breadcrumb, .breadcrumb-left, .breadcrumb-right {
+    background-color: #f9f9f9;
+    color: #323232;
+    padding: 1em;
+    border: 1px solid #ccc;
+    height: 3em;
+    margin: 1em;
+    letter-spacing: 0.5px;
+}
+
+.breadcrumb-left {
+    border-style: solid;
+    border-color: #ccc;
+    border-top-width: 1px;
+    border-right-width: 0;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.breadcrumb-right {
+    border-style: solid;
+    border-color: #ccc;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0;
+    border-collapse: collapse;
+}
+
+table tr td.breadcrumb {
+    border-collapse: collapse;
+}
+
+/* list items, aka subcommand list */
+
+ul.listitems li {
+    padding: 0.5em;
+    border: 0px solid #ccc;
+    height: 1em;
+    list-style-type: disc; 
+    width: 25em;
+    margin: 0em 0em 0.25em 3em;
+    color: #007aa3;
+}
+
+ul.listitems li a {
+    color: #007aa3;
+}
+
+ul.listitems li a:hover {
+}
+
+ul .listitem {
+    padding: 0.5em;
+    border: 0px solid #ccc;
+    height: 1em;
+    list-style-type: disc; 
+    width: 25em;
+    margin: 0em 0em 0.25em 3em;
+}
+
+.listitem a {
+    color: #007aa3;
+}
+
+.listitem a:hover {
+}
+
+.listitem {
+    margin: -0.25em 0em 0.0em 3em;
+    color: #007aa3;
+}
+
+.listitem-input {
+    list-style-type: none;
+    color: #007aa3;
+}
+
+.listitem-input input {
+    margin: -0.5em 0em 0em 3em;
+    text-decoration: none;
+    color: #007aa3;
+}
+
+/* menu items */
+    
+.menuitem, .menuitem-unclickable {
+    background-color: #fff;
+    color: #2e5e83;
+    height: 2.5em;
+    padding-left: 2em;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-top: none;
+    border-right: 1px solid #ccc;
+    border-bottom: none;
+    border-left: 1px solid #ccc;
+    border-collapse: collapse;
+}
+
+.menuitem {
+    cursor: hand;
+}
+
+.menuitem a {
+    color: #2e5e83;
+    text-decoration: none;
+    outline: 0;
+}
+
+.menuitemspan {
+    color: #004a6d;
+}
+
+.menuitemspanie {
+    color: #004a6d;
+    text-decoration: none;
+}
+
+.menuitem-x {
+    outline: 0;
+}
+
+.menuseparator {
+    border-top: 1px solid #F7F7D7;
+}
+
+.fakeanchor { 
+    color: #633100;
+}
+
+.title {
+    background-color: #08429C;
+    color: #FFFFFF;
+    text-align: left;
+    font-weight: bold;
+}
+
+.subheading2 {
+    background-color: #e5e5e4;
+    color: #000;
+    padding: 1em;
+    text-align: center;
+    border-bottom: 1px solid #474747;
+    height: 2em;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.subHeading, .subheading-r {
+    background-color: #ddd;
+    color: #352821;
+    padding-left: 5px;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.subHeading {
+    text-align: left;
+}
+
+.subHeading-r {
+    text-align: right;
+}
+
+.subHeading-r a, .subHeading a {
+    color: #2D415F;
+    font-weight: normal;
+}
+
+.subHeading a:hover { 
+    color: #000064;
+}
+
+.memgraph {
+    background-color: #F0F0E0;
+    vertical-align: bottom;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
+
+.memgraph img {
+    padding: 0px;
+    margin: 0px;
+}
+
+
+.oddrow, 
+.oddrow-l,
+.oddrowdata, 
+.oddrowdata-l, 
+.oddrowdata-r,
+.oddcol, 
+.oddcol-l, 
+.oddcol-r,
+.rowlabel,
+.rowdata,
+.oddchildrow,
+.oddchildrow {
+    /* background-color: #ddefff; */
+    background-color: #fff;
+}
+
+.evenrow,
+.evenrow-l,
+.evenrowdata,
+.evenrowdata-l,
+.evenrowdata-r,
+.evencol,
+.evencol-l,
+.evencol-r,
+.evenchildrow,
+.evenchildrowred {
+    background-color: #fff;
+}
+
+.oddrow-l a, .evenrow-l a, .oddrowdata-l, .evenrowdata-l {
+    font-weight: bold;
+}
+
+.oddcol-l {
+    text-align: left;
+    padding-left: 2px;
+    color: red;
+}
+
+.oddcol-l, .evencol-l {
+    text-align: left;
+    padding-left: 2px;
+}
+
+.oddcol-r, .evencol-r {
+    text-align: right;
+    padding-right: 2px;
+}
+
+.evencol, .oddcol {
+    text-align: center;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.oddcol,
+.evencol,
+.evencol-l,
+.evencol-r,
+.oddcol-l,
+.oddcol-r {
+    color: #332211;
+    border-bottom: 1px solid #DCCDC6;
+}
+
+.oddrow,
+.oddrowdata-r,
+.evenrow,
+.evenrowdata-r,
+.rowlabel {
+    text-align: right;
+    padding-left: 5px;
+}
+
+.oddrow-l,
+.oddrowdata-l,
+.evenrow-l,
+.evenrowdata-l,
+.rowdata {
+    text-align: left;
+    padding-right: 5px;
+}
+
+.oddrowdata,
+.evenrowdata {
+    padding-left: 2px;
+    padding-right: 2px;
+    text-align: center;
+}
+
+.oddrow a,
+.oddrow-l a,
+.oddrowdata a,
+.oddrowdata-l a,
+.oddrowdata-r a,
+.oddcol a,
+.evenrow a,
+.evenrow-l a,
+.evenrowdata a,
+.evenrowdata-l a,
+.evenrowdata-r a,
+.evencol a,
+.rowdata a,
+.rowdata-l a,
+.tabledata a {
+    color: #007aa3;
+}
+
+.oddrow a:hover,
+.oddrow-l a:hover,
+.oddrowdata a:hover,
+.oddrowdata-l a:hover,
+.oddrowdata-r a:hover,
+.oddcol a:hover,
+.evenrow a:hover,
+.evenrow-l a:hover,
+.evenrowdata a:hover,
+.evenrowdata-l a:hover,
+.evenrowdata-r a:hover,
+.evencol a:hover,
+.evenchildrow a:hover,
+.oddchildrow a:hover,
+.rowdata a:hover,
+.rowdata-l a:hover,
+.tabledata a:hover {
+    text-decoration: underline;
+}
+
+.evenchildrow, .oddchildrow, .evenchildrow a, .oddchildrow a {
+    color: #08419C;
+    text-align: left;
+    padding-left: 2px;
+}
+
+.evenchildrowred, .oddchildrowred, .evenchildrowred a, .oddchildrowred a {
+    color: red;
+    text-align: left;
+    padding-left: 2px;
+}
+    
+.fixedwidth {
+    font-family: "Tahoma", "Courier";
+}
+
+.grouping-positive {
+    color: #187863;
+}
+
+.grouping-negative {
+    color: C60829;
+}
+
+.grouping-neutral {
+    color: #717171;
+}
+
+.action {
+    background-color: #fff;
+    color: #FFFFFF;
+    text-align: left;
+    letter-spacing: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-right: 1px solid #95AACD;
+    border-left: 1px solid #5C7CB2;
+    border-bottom: 1px solid #95AACD;
+    border-top: 1px solid #5C7CB2;
+}
+
+.action input {
+    background-color: #D8D8D8;
+    color: black;
+}
+
+.widebuttons {
+    letter-spacing: 2px;
+    font-weight: bold;
+    background-color: #006f97;
+    color: #fff;
+    width: 95%;
+}
+
+.imagelink {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    cursor: hand;
+}
+
+.cursor { 
+    cursor: pointer;
+    cursor: hand;
+}
+
+.tableView,
+.tableForm {
+    padding: 0;
+    border-spacing: 0;
+    border-collapse: collapse;
+    border: none;
+}
+
+.tableView td,
+.tableForm td {
+    border: 1px solid #dcdcdc;
+    height: 2em;
+    padding-top: 0.5em;
+    padding-right: 0.5em;
+    padding-bottom: 0.5em;
+    padding-left: 1em;
+    text-align: left;
+}
+
+.tableView .oddrowdata-l,
+.tableForm .oddrowdata-l,
+.tableView .evenrowdata-l,
+.tableForm .evenrowdata-l,
+.tableView .field,
+.tableForm .field {
+    text-align: left;
+}
+
+.tableView .field a,
+.tableForm .field a {
+    color: #007aa3;
+}
+
+.tableView .field a:hover,
+.tableForm .field a:hover {
+    color: #007aa3;
+}
+
+.tableView .evenrow,
+.tableView .oddrow,
+.tableForm .evenrow,
+.tableForm .oddrow {
+    text-align: right;
+    background-color: #fff;
+}
+
+.tableView .evenrowdata,
+.tableView .evenrowdata-r,
+.tableView .evenrowdata-l,
+.tableView .tabledata,
+.tableView .tabledata-r,
+.tableView .tabledata-l,
+.tableView .oddrowdata,
+.tableView .oddrowdata-r,
+.tableView .oddrowdata-l,
+.tableForm .evenrowdata,
+.tableForm .evenrowdata-r,
+.tableForm .evenrowdata-l,
+.tableForm .tabledata,
+.tableForm .tabledata-r,
+.tableForm .tabledata-l,
+.tableForm .oddrowdata,
+.tableForm .oddrowdata-r,
+.tableForm .oddrowdata-l {
+    text-align: left;
+    background-color: #fff;
+}
+
+.tableView .evenrowdata,
+.tableView .oddrowdata,
+.tableForm .evenrowdata,
+.tableForm .oddrowdata {
+    text-align: center;
+    background-color: #fff;
+}
+
+.tableView .subheading2 .evenrow,
+.tableView .subheading2 .oddrow,
+.tableView .subheading2 .evencol,
+.tableView .subheading2 .oddcol,
+.tableForm .subheading2 .evenrow,
+.tableForm .subheading2 .oddrow,
+.tableForm .subheading2 .evencol,
+.tableForm .subheading2 .oddcol {
+    background-color: #e5e5e4;
+    color: #000;
+    padding: 1em;
+    text-align: center;
+    height: 2em;
+}
+
+.memoryGraph td {
+    border: none;
+}
+
+.menuTable {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+}
+
+.noborders td {
+    border-collapse: collapse;
+    border: 0px;
+}
+
+.lefttext {
+    text-align: left;
+}
+
+.subheading2 td {
+    text-align: center;
+    background-color: #e5e5e4;
+    color: #323232;
+}
+
+table.menuTable tr td.menusection-Action, 
+table.menuTable tr td.menusection-Server,
+table.menuTable tr td.menusection-Logs, 
+table.menuTable tr td.menusection-Packages, 
+table.menuTable tr td.menusection-Adapters,
+table.menuTable tr td.menusection-Security, 
+table.menuTable tr td.menusection-Settings,
+table.menuTable tr td.menusection-Solutions,
+table.menuTable tr td.menusection-MobileGateway, 
+table.menuTable tr td.menusection-webMethods {
+    background-color: #fff;
+    color: #0c3b60;
+    font-weight: normal;
+    padding-left: 5px;
+    padding-right: 15px;
+    height: 2.5em;
+    border: 1px solid #ccc;
+}
+
+table.menuTable tr td.menusection-expanded {
+    background-color: #006f97;
+    color: #fff;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-right: 15px;
+    height: 2.5em;
+    border: 1px solid #ccc;
+}
+
+.menusection-collapsed {
+    background-color: #fff;
+}
+
+#usedMemoryBar td {
+    background-color: #989898;
+    border: none;
+}
+
+#freeMemoryBar td {
+    background-color: #8bcfed;
+    border: none;
+}
+
+table {
+/*    border: 2px dotted #33fafa; */
+    border-collapse: collapse;
+    padding: 0px;
+}
+
+table.tableView,
+table.tableForm {
+/*    border: 4px dashed red; */
+    border-collapse: collapse;
+    margin: 8px 0 0 0;
+    padding: 0;
+}
+
+tr ul {
+/*    border: 3px dotted green; */
+    border-collapse: collapse;
+    margin: 8px 0 0 0;
+    padding: 0;
+}
+
+table.tableView tr td table,
+table.tableForm tr td table {
+/*    border: 2px dashed magenta; */
+    border-collapse: collapse;
+    margin: 8px 0 0 0;
+    padding: 0;
+}
+
+.memoryGraph .memoryTable {
+    margin-left: auto;
+    margin-right: auto;
+    width: 300px;
+/*    border: 2px dashed magenta; */
+    text-align: center;
+}
+
+.tableInline {
+    border: none;
+    border-collapse: collapse;
+}
+
+.tableInline tr td {
+    border: none;
+    border-collapse: collapse;
+}
+
+.tableView .heading,
+.tableForm .heading {
+    border: none;
+    border-collapse: collapse;
+    background-color: #006f97;
+    color: #FFFFFF;
+    padding: 0px 0px 0px 1em;
+    text-align: left;
+    font-weight: bold;
+    height: 2.5em;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    letter-spacing: 2px;
+}
+
+body.menu {
+}
+
+td.space {
+    border: none;
+    border-collapse: collapse;
+}
+
+td.memgraph {
+    padding: 0px;
+    margin: 0px;
+}
+
+.memoryTable td {
+    background: white;
+    border: none;
+}
+
+td.memgraph img {
+    border: none;
+    background-color: #006f97;
+    padding: 2px;
+    margin: 2px;
+}
+
+td.action {
+    border: none;  
+}
+
+td.action {
+    border: none;  
+}
+
+body table tr td.menusection-Action, 
+body table tr td.menusection-Adapters,
+body table tr td.menusection-Logs, 
+body table tr td.menusection-MobileGateway, 
+body table tr td.menusection-Packages, 
+body table tr td.menusection-Security, 
+body table tr td.menusection-Server,
+body table tr td.menusection-Settings,
+body table tr td.menusection-Solutions,
+body table tr td.menusection-webMethods {
+    background-color: #f9f9f9;
+    color: #323232;
+    padding: 1em;
+    border: 1px solid #ccc;
+    height: 3em;
+    margin: 1em;
+}
+
+body table tr td ul li {
+    padding: 0.5em;
+    border: 0px solid #ccc;
+    height: 1em;
+    list-style-type: disc; 
+    width: 25em;
+    margin: 0em 0em 0.25em 3em;
+    color: #007aa3;
+}
+
+body table tr td ul li a {
+    color: #007aa3;
+}
+
+body table tr td ul li a:hover {
+}
+
+table.menuTable tr td.menuitem-selected {
+    background-color: #0899cc;
+}
+
+table.menuTable tr td.menuitem-selected span a {
+    color: #fff;
+}

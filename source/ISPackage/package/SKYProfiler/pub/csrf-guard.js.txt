@@ -1,0 +1,12 @@
+var _csrfTokenNm_           =  _csrfTokenNm_;
+var _csrfTokenVal_          =  _csrfTokenVal_;  
+var is_csrf_guard_enabled   =  is_csrf_guard_enabled;
+var needToInsertToken       =  needToInsertToken;
+
+if(is_csrf_guard_enabled != true && is_csrf_guard_enabled != false) {
+    is_csrf_guard_enabled = false;
+}
+
+if(needToInsertToken != true && needToInsertToken != false) {
+    needToInsertToken = false;
+}

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="skyProfilerApp" ng-controller="skyProfilerReportCtrl">
+    <head>
+        <meta charset="utf-8"></meta>
+        <meta name="viewport" content="width=device-width"></meta>
+
+        <title>SkyProfiler - Reports</title>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+
+        <style type="text/css">
+            * { border-radius: 0 !important; }
+
+            body { color: #666; }
+
+            .page-header h3 {color: #666;}
+            .page-header h3 b { color: #0899CC; }
+            .service-name { 
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="page-header">
+                    <h3>webMethods Integration Server <b>Sky Profiler</b> <br/><small>Performance Report</small></h3>
+				</div>
+
+                <div ng-repeat="resource in profileData">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h2 class="panel-title service-name">{{ resource.sN | uppercase }}</h2>
+                        </div>
+
+						<div class="panel-body">
+							<div class="col-md-6">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title"> Service Overview </h4>
+									</div>
+
+									<div class="panel-body">
+										<table class="table table-hover table-bordered table-ellipsis">
+											<tr>
+												<th class="col-sm-4"> Service Name  </th>
+												<td class="service-name col-sm-8"> {{ resource.sN }} </td>
+											</tr>
+											<tr>
+												<th class="col-sm-4"> Package Name  </th>
+												<td class="service-name col-sm-8"> {{ resource.pN }} </td>
+											</tr>
+											<tr>
+												<th class="col-sm-4"> Service Type  </th>
+												<td class="col-sm-8"> {{ resource.sT }} </td>
+											</tr>
+											<tr>
+												<th class="col-sm-4"> Total Invocations  </th>
+												<td class="col-sm-8"> {{ resource.count }} </td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title"> Service Execution Statistics </h4>
+									</div>
+
+									<div class="panel-body">
+										<table class="table table-hover table-bordered">
+											<tr>
+												<th> Minimum Response Time  </th>
+												<td> {{ (resource.minRT / 1000000).toFixed(2) }} (msec)</td>
+											</tr>
+											<tr>
+												<th> Maximum Response Time  </th>
+												<td> {{ (resource.maxRT / 1000000).toFixed(2) }} (msec)</td>
+											</tr>
+											<tr>
+												<th> Average Response Time  </th>
+												<td> {{ (resource.avgRT / 1000000).toFixed(2) }} (msec)</td>
+											</tr>
+											<tr>
+												<th> Total Response Time  </th>
+												<td> {{ (resource.totalRT / 1000000).toFixed(2) }} (msec)</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-12">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title"> Service Execution Graph </h4>
+									</div>
+
+									<div class="panel-body">
+										<div ng-init="serviceDataSet = getData(resource.sN, resource.graphData)">
+											<flot id="float" dataset="serviceDataSet" options="serviceGraphOptions" height="480px"></flot>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+							<div ng-if="resource.children.length" class="col-md-12">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title"> Child Services </h4>
+									</div>
+
+									<div class="panel-body">
+										<table class="table table-hover table-bordered table-ellipsis">
+											<thead>
+												<tr>
+													<th>Service Name</th>
+													<th>Package Name</th>
+													<th>Service Type</th>
+													<th>Total Invocations</th>
+													<th>Total Response Time</th>
+													<th>Min RT (msec)</th>
+													<th>Max RT (msec)</th>
+													<th>Avg RT (msec)</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="data in resource.children">
+													<td class="service-name"> {{ data.sN }} </td>
+													<td class="service-name"> {{ data.pN }} </td>
+													<td> {{ data.sT }} </td>
+													<td> {{ data.count }} </td>
+													<td> {{ (data.rT / 1000000).toFixed(2) }} </td>
+													<td> {{ (data.minRT / 1000000).toFixed(2) }} </td>
+													<td> {{ (data.maxRT / 1000000).toFixed(2) }} </td>
+													<td> {{ ((data.rT / data.count) / 1000000).toFixed(2) }} </td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>							
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.navigate.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.14/angular-filter.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>	
+		
+		<script type="text/javascript">
+			
+		/*
+		 * The MIT License (MIT)
+		 *
+		 * Copyright (c) 2016 Develer S.r.L.
+		 *
+		 * Permission is hereby granted, free of charge, to any person obtaining a copy
+		 * of this software and associated documentation files (the "Software"), to deal
+		 * in the Software without restriction, including without limitation the rights
+		 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+		 * copies of the Software, and to permit persons to whom the Software is
+		 * furnished to do so, subject to the following conditions:
+		 *
+		 * The above copyright notice and this permission notice shall be included in all
+		 * copies or substantial portions of the Software.
+		 *
+		 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+		 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+		 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+		 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+		 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+		 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+		 * SOFTWARE.
+		 */
+
+		 /* global $ */
+		 /* global angular */
+		 /* global jQuery */
+
+		 angular.module('angular-flot', []).directive('flot', ['$timeout', function ($timeout) {
+		  return {
+		    restrict: 'EA',
+		    template: '<div></div>',
+		    scope: {
+		      dataset: '=',
+		      options: '=',
+		      callback: '=',
+		      onPlotClick: '&',
+		      onPlotHover: '&',
+		      onPlotSelected: '&'
+		    },
+		    link: function (scope, element, attributes) {
+		      var plot = null;
+		      var width = attributes.width || '100%';
+		      var height = attributes.height || '100%';
+
+		      // Bug: Passing a jQuery object causes an infinite loop within Angular. Fail hard telling
+		      // users that they should pass us a jQuery expression as string instead.
+		      if ((((scope.options || {}).legend || {}).container) instanceof jQuery) {
+		        throw new Error('Please use a jQuery expression string with the "legend.container" option.');
+		      }
+
+		      if (!scope.dataset) {
+		        scope.dataset = [];
+		      }
+
+		      if (!scope.options) {
+		        scope.options = {
+		          legend: {
+    		        show: false
+    		      }
+    		    };
+    		  }
+
+		      var plotArea = $(element.children()[0]);
+
+		      plotArea.css({
+		        width: width,
+		        height: height
+		      });
+
+		      var init = function () {
+			      var plotObj = $.plot(plotArea, scope.dataset, scope.options);
+			      if (scope.callback) {
+				      scope.callback(plotObj);
+				  }
+			      return plotObj;
+			  };
+
+		      //
+		      // Events
+		      //
+		      plotArea.on('plotclick', function onPlotClick (event, pos, item) {
+			      $timeout(function onApplyPlotClick () {
+				      scope.onPlotClick({
+					      event: event,
+					      pos: pos,
+					      item: item
+					  });
+				      //plot.unhighlight();
+		              //console.log(plot);
+		              //console.log(item);
+		              //console.log(item.series);
+		              //console.log(item.datapoint);
+		              //plot.highlight(item.series, item.datapoint);
+				  });
+			  });
+
+		      plotArea.on('plotselected', function onPlotSelected (event, ranges) {
+			      $timeout(function onApplyPlotSelected () {
+				      scope.onPlotSelected({
+					      event: event,
+					      ranges: ranges
+					  });
+				  });
+			  });
+
+		      $("<div id='tooltip'></div>").css({
+			      position: "absolute",
+			      display: "none",
+			      border: "1px solid #fdd",
+			      padding: "2px",
+			      "background-color": "#333",
+			      color: "#fff",
+			      opacity: 0.80
+			  }).appendTo("body");
+
+		      plotArea.on('plothover', function onPlotHover (event, pos, item) {
+			      $timeout(function onApplyPlotHover () {
+				      scope.onPlotHover({
+					      event: event,
+					      pos: pos,
+					      item: item
+					  });
+
+				      if (item) {
+					      var date = new Date(item.datapoint[0]);
+					      var x = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds().toFixed(3);
+					      var y = item.datapoint[1].toFixed(2);
+
+					      $("#tooltip").html("Response Time = " + y + " ms" + "<br>" + " Time = " + x)
+		      		          .css({top: item.pageY+5, left: item.pageX+5 })
+		      		          .fadeIn(200);
+					  } else {
+					      $("#tooltip").hide();
+					  }
+				  });
+			  });
+
+		      //
+		      // Watches
+		      //
+
+		      var onOptionsChanged = function () {
+			      plot = init();
+			  };
+
+		      //var zoomOutButton = ;
+		      plotArea.dblclick(function() {
+			      plot = init();
+			  });
+
+		      var unwatchOptions = scope.$watch('options', onOptionsChanged, true);
+
+		      var onDatasetChanged = function (dataset) {
+			      if (plot) {
+				      plot.setData(dataset);
+				      plot.setupGrid();
+
+				      return plot.draw();
+				  } else {
+				      plot = init();
+				  }
+			  };
+
+		      var unwatchDataset = scope.$watch('dataset', onDatasetChanged, true);
+
+		      attributes.$observe('width', function (value) {
+			      if (!value) return;
+
+			      width = value;
+			      plotArea.css('width', value);
+			  });
+
+		      attributes.$observe('height', function (value) {
+			      if (!value) return;
+
+			      height = value;
+			      plotArea.css('height', value);
+			  });
+
+		      //
+		      // Tear Down
+		      //
+
+		      element.on('$destroy', function onDestroy () {
+			      plotArea.off('plotclick');
+			      plotArea.off('plothover');
+			      plotArea.off('plotselected');
+
+			      plot.destroy();
+			      unwatchDataset();
+			      unwatchOptions();
+			  });
+		    }
+		  };
+		}]);
+		</script>
+
+		<script type="text/javascript">
+			angular.module('skyProfilerApp', ['angular.filter', 'angular-flot'])
+			.controller('skyProfilerReportCtrl', function($scope, $http, $location) {
+				$scope.serviceGraphOptions = {
+					legend: {
+						show: false
+					},
+					xaxis: {
+						mode: "time",
+						timeformat: "%H:%M:%S",
+						timezone: "browser"
+					},
+					series: {
+						lines: { 
+							show: true,
+							lineWidth: 1
+						},
+						points: { show: false }
+					},
+					zoom: {
+						interactive: true,
+						mode: "xy"
+					},
+					pan: {
+						interactive: true
+					},
+
+					grid: { 
+						borderWidth: 0,
+						hoverable: true,
+						clickable: true
+					}
+				};
+
+				$scope.profileData = $PROFILED_DATA$;
+
+				$scope.getData = function(serviceName, graphData) {
+					var dataset = [{color: '#333', data: graphData, yaxis: 1, label: serviceName }];
+					return dataset;
+				}
+			});
+		</script>
+	</body>
+</html>

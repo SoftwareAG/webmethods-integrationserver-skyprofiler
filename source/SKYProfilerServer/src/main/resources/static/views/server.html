@@ -1,0 +1,321 @@
+<div class="sag-card" style="height: 100vh;">
+    <div class="page-title-area" style="padding-left: 1px; padding-right: 3px;">
+        <div class="col-md-5" style="padding-left: 0px">
+            <h2>
+                {{ server.serverName | uppercase }} <small> Service
+                    Monitoring </small>
+            </h2>
+        </div>
+        <div class="col-md-3 pull-right" style="padding-right: 0px">
+            <div class="btn-group pull-right">
+                <button id="start" type="button" class="btn btn-primary" ng-click="server.doStart(item, $event)"
+                ng-if="!server.isRunning" style="padding-left: 15px; padding-right: 15px; margin-right: 10px">
+                    <i class="glyphicon glyphicon-play"></i>&nbsp;Start
+                </button>
+                <button id="stop" type="button" class="btn btn-success" ng-click="server.doStop(item, $event)"
+                ng-if="server.isRunning" style="padding-left: 15px; padding-right: 15px; margin-right: 10px">
+                    <i class="glyphicon glyphicon-stop"></i>&nbsp;Stop
+                </button>
+                <button id="dom-reload" type="button" class="btn btn-primary" ng-click="" style="display: none;">
+                    <i class="glyphicon glyphicon-stop"></i>&nbsp;&nbsp; DOMRELOAD
+                </button>
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
+                    style="padding-left: 15px; padding-right: 15px;">
+                    <i class="fa fa-bars"></i>&nbsp;Options <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a id="clear" ng-click="server.clearProfiledData(server.serverName)">
+                            <i class="glyphicon glyphicon-trash">
+                            </i>&nbsp;&nbsp; Clear Profiled Data</a>
+                    </li>
+                    <li>
+                        <a id="report" ng-click="server.generateReport(server.serverName)">
+                            <i class="glyphicon glyphicon-copy">
+                            </i>&nbsp;&nbsp; Report</a>
+                    </li>
+                    <li>
+                        <a id="baseline" ng-click="server.takeBaseline(server.serverName)">
+                            <i class="glyphicon glyphicon-camera">
+                            </i>&nbsp;&nbsp; Take <span ng-if="server.isBaselineAvailable">new</span> Baseline</a>
+                    </li>
+                    <li>
+                        <a id="configuration" ng-click="server.beforeConfigure(server.serverName)"
+                            data-toggle="modal" data-target="#configModal"><i class="glyphicon glyphicon-cog">
+                            </i>&nbsp;&nbsp; Configurations</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div>
+            <div class="table-area" style="padding-left: 10px; padding-right: 10px;">
+                <div class="table-title">
+                    <div class="col-sm-2">
+                        <h4 class="panel-title">
+                            <span>ServiceName</span>
+                        </h4>
+                    </div>
+                    <div class="col-sm-2">
+                        <h4 class="panel-title">
+                            <span>PackageName</span>
+                        </h4>
+                    </div>
+                    <div class="col-sm-1">
+                        <h4 class="panel-title text-center">
+                            <span>Type</span>
+                        </h4>
+                    </div>
+                    <div class="col-sm-1">
+                        <h4 class="panel-title text-center">
+                            <span>Count</span>
+                        </h4>
+                    </div>
+                    <div class="col-sm-1">
+                        <h4 class="panel-title text-center">
+                            <span>TotalTime(ms)</span>
+                        </h4>
+                    </div>
+                    <div class="col-sm-2">
+                        <h4 class="panel-title text-center">
+                            <span>AverageRT(ms)</span>
+                        </h4>
+                    </div>
+                    <div class="col-sm-1">
+                        <h4 class="panel-title text-center">
+                            <span>Threshold</span>
+                        </h4>
+                    </div>
+                    <div class="col-sm-1">
+                        <h4 class="panel-title text-center">
+                            <span>Alerts</span>
+                        </h4>
+                    </div>
+                    <div class="col-sm-1">
+                        <h4 class="panel-title text-center">
+                            <span>Graph</span>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <!-- table content area -->
+            <div class="row service-list-table" style="padding-left: 10px; padding-right: 10px;">
+                <accordion close-others="true">
+                    <accordion-group heading="{{ item.sN }}" is-open="status.isFirstOpen"
+                    is-disabled="status.isFirstDisabled" ng-click="server.changeServiceName(item.sN, item.pN)"
+                    ng-repeat="item in server.currentItems">
+                        <accordion-heading>
+                            <div class="row">
+                                <div class="col-sm-2 service-name" title="{{ item.sN }}">{{ item.sN }}</div>
+                                <div class="col-sm-2 service-data" title="{{ item.pN }}">{{ item.pN }}</div>
+                                <div class="col-sm-1 text-center">{{ item.sT }}</div>
+                                <div class="col-sm-1 text-center">{{ item.count }}</div>
+                                <div class="col-sm-1 text-center">{{ (item.totalRT/1000000).toFixed(4) }}</div>
+                                <div class="col-sm-2 text-center">{{ ((item.totalRT/item.count)/1000000).toFixed(4) }} [{{ (item.drift
+                                / 1000000).toFixed(2) }} %]</div>
+                                <div class="col-sm-1 text-center">
+                                    <a href="#" class="threshold" editable-text="item.alertThreshold"
+                                    onbeforesave="server.validateThresholdValue($data)"
+                                    onaftersave="server.thresholdChanged($data, server.serverName, item.sN)"
+                                    buttons="no" blur="ignore" e-style="width: 40px;"
+                                    ng-click="server.xeditOpen($event, $data)">{{ item.alertThreshold }}%</a>
+                                </div>
+                                <div class="col-sm-1 alert-no text-center">{{ item.violations }}</div>
+                                <div class="col-sm-1 text-center">
+                                    <i class="fa fa-line-chart"></i>
+                                </div>
+                            </div>
+                        </accordion-heading>
+                        <h4 class="text-left">
+                        Response Time (msec)
+                            <div class="pull-right" style="font-size: 16px;">
+                                <ul class="legend-markings">
+                                    <li>
+                                        <span class="baseline">
+                                        </span> Baseline</li>
+                                    <li>
+                                        <span class="threshold">
+                                        </span> Threshold</li>
+                                </ul>
+                            </div>
+                        </h4>
+                        <flot dataset="server.mainServiceGraphDataset"
+                        on-plot-click="server.showDataPointServiceInfo(item, server.serverName)"
+                        options="server.mainServiceGraphOptions" height="250px"></flot> <br />
+                        <h4>Service Call Tree</h4>
+                        <div class="row" ng-if="server.tree_data.length===0">
+                            <p class="service-tree-info">No data. Click on the data point
+                            in the Response Time graph to display the tree.</p>
+                        </div>
+                        <div class="row service-tree-table" ng-if="server.tree_data.length>0">
+                            <tree-grid tree-data="server.tree_data" col-defs="server.col_defs"
+                            expand-on="server.expanding_property"> </tree-grid>
+                            <br />
+                        </div>
+                    </accordion-group>
+                </accordion>
+            </div>
+            <div class="text-center row" style="margin: 0px; padding: 0px; color: #0899CC;"
+                ng-if="server.currentItems === undefined || server.currentItems.length===0">
+                <medium>No profiled data to display. Waiting for the service execution!!! </medium>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Correlation  Modal -->
+<div id="correlationModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" style="color: #0899CC;" id="myModalLabel">{{ server.correlationServiceSelected }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">Response Time (msec)</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <flot dataset="server.correlationServiceDataset"
+                                        options="server.correlationServiceOptions"
+                                        on-plot-click="server.drawMarking(event, pos, item)"
+                                        width="{{ server.panelWidth }}" height="200px"></flot>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">Thread level CPU Time (msec)</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <flot dataset="server.threadcpudataset" options="server.threadcpuoptions"
+                                        on-plot-click="server.drawMarking(event, pos, item)"
+                                        width="{{ server.panelWidth }}" height="200px"></flot>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">CPU (%)</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <flot dataset="server.cpudataset" options="server.cpuoptions"
+                                        on-plot-click="server.drawMarking(event, pos, item)"
+                                        width="{{ server.panelWidth }}" height="200px"></flot>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">GC Time (msec)</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <flot dataset="server.gcdataset" options="server.gcoptions"
+                                        on-plot-click="server.drawMarking(event, pos, item)"
+                                        width="{{ server.panelWidth }}" height="200px"></flot>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">Disk Latency (msec)</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <flot dataset="server.diskdataset" options="server.diskoptions"
+                                        on-plot-click="server.drawMarking(event, pos, item)"
+                                        width="{{ server.panelWidth }}" height="200px"></flot>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">Network Latency (msec)</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <flot dataset="server.networkdataset"
+                                        options="server.networkoptions"
+                                        on-plot-click="server.drawMarking(event, pos, item)"
+                                        width="{{ server.panelWidth }}" height="200px"></flot>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Configurations Modal -->
+<div id="configModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Configurations</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="includedPkgList" class="col-sm-6 control-label">Include
+                            Packages for Profiling</label>
+                        <div class="col-sm-6">
+                            <ol id="dynamic-options" class="form-control nya-bs-select"
+                                ng-model="server.selectedPackageList" data-live-search="true" multiple>
+                                <li
+                                    nya-bs-option="packageInfo in server.configurationData.packages"
+                                    deep-watch="true" value="packageInfo.name"><a> {{ packageInfo.name }} <span
+                                        class="glyphicon glyphicon-ok check-mark"></span>
+                                    </a>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="kafkaBootstrapUrl" class="col-sm-6 control-label">Kafka Bootstrap Url [ IP : Port ]</label>
+                        <div class="col-sm-6">
+                            <input id="kafkaBootstrapUrl" type="text" class="form-control"
+                                ng-model="server.configurationData.kafkaBootstrapUrl"></input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="kafkaTopicName" class="col-sm-6 control-label">Kafka Topic Name</label>
+                        <div class="col-sm-6">
+                            <input id="kafkaTopicName" type="text" class="form-control"
+                                ng-model="server.configurationData.kafkaTopicName"></input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="externalHostname" class="col-sm-6 control-label">External Server Hostname</label>
+                        <div class="col-sm-6">
+                            <input id="externalHostname" type="text" class="form-control"
+                                ng-model="server.configurationData.externalHostname"></input>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="ConfigSave" type="button" class="btn btn-primary" ng-click="server.saveConfig(server.serverName)"
+                    data-dismiss="modal">
+                    <i class="glyphicon glyphicon-ok"></i> Save
+                </button>
+                <button id="ConfigCancel" type="button" class="btn btn-default" ng-click="cancel()" data-dismiss="modal">
+                    <i class="glyphicon glyphicon-remove"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

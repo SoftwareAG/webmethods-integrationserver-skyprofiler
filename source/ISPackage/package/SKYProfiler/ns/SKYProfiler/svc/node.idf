@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Values version="2.0">
+  <value name="encodeutf8">true</value>
+  <value name="shared"></value>
+  <value name="extends"></value>
+  <array name="implements" type="value" depth="1">
+  </array>
+  <array name="imports" type="value" depth="1">
+    <value>com.wm.util.sort.QuickSort</value>
+    <value>com.wm.util.sort.Sortable</value>
+    <value>com.wm.app.b2b.server.Package</value>
+    <value>com.wm.app.b2b.server.PackageManager</value>
+    <value>com.wm.app.b2b.server.invoke.InvokeManager</value>
+    <value>com.wm.util.List</value>
+    <value>java.io.File</value>
+    <value>java.io.FileWriter</value>
+    <value>java.lang.management.ManagementFactory</value>
+    <value>java.util.ArrayList</value>
+    <value>java.util.Collection</value>
+    <value>java.util.Map</value>
+    <value>java.util.Properties</value>
+    <value>com.softwareag.skyprofiler.*</value>
+    <value>com.softwareag.skyprofiler.data.*</value>
+    <value>com.softwareag.skyprofiler.utility.*</value>
+    <value>com.sun.management.OperatingSystemMXBean</value>
+    <value>com.google.gson.Gson</value>
+  </array>
+</Values>
