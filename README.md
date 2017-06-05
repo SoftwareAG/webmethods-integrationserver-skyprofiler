@@ -29,21 +29,21 @@ The project needs below software as a pre-requisite to get started.
 * Apache Kafka
 
 **MongoDB**  
-MongoDB will be used to store the executed service data. To install and configure MongoDB refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/doc/FAQ.txt)  
+MongoDB will be used to store the executed service data. To install and configure MongoDB refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/blob/master/doc/FAQ.txt)  
 Start the service  
 ```
 C:\Program Files\MongoDB\Server\3.4\bin> mongod.exe --dbpath="C:\Program Files\MongoDB\data"
 ```
 
 **Zookeeper**  
-Zookeeper is used to provide distributed configuration service for Kafka. To install and configure Zookeeper refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/doc/FAQ.txt)  
+Zookeeper is used to provide distributed configuration service for Kafka. To install and configure Zookeeper refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/blob/master/doc/FAQ.txt)  
 Start the service  
 ```
 C:\zookeeper-3.4.9\bin> zkServer.cmd
 ```
 
 **Apache Kafka**  
-Kafka is a distributed messsaging system used for sending events from SKY Profiler Runtime to SKY Profiler Server. To install and configure Kafka refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/doc/FAQ.txt)  
+Kafka is a distributed messsaging system used for sending events from SKY Profiler Runtime to SKY Profiler Server. To install and configure Kafka refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/blob/master/doc/FAQ.txt)  
 Start the service
 ```
 C:\kafka_2.11-0.10.1.1\bin\windows> kafka-server-start.bat ..\..\config\server.properties
@@ -55,7 +55,7 @@ Download SKY Profiler by
 git clone https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler
 ```
  
-SKY Profiler Server requires Apache Ant and Apache Maven to be present in the machine for build process. To install and configure Apache Ant and Apache Maven refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/doc/FAQ.txt)  
+SKY Profiler Server requires Apache Ant and Apache Maven to be present in the machine for build process. To install and configure Apache Ant and Apache Maven refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/blob/master/doc/FAQ.txt)  
 Update maven path in _build.properties_.  
 Copy _wm-isclient.jar_ and _wm-isserver.jar_ from webMethods Integration Server installation to ```{webMethods-IntegrationServer-SKYProfiler}\libraries``` which are required for SKY Profiler Runtime component.
 Update MongoDB and Kafka configuration in ```{webMethods-IntegrationServer-SKYProfiler}\SKYProfilerServer\src\main\application.properties```  
