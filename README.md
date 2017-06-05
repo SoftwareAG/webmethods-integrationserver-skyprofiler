@@ -11,103 +11,104 @@ SKY Profiler Runtime is an Integration Server package which is required to send 
 The project was developed and tested on the following installation:
 
 1. Integration Server 10.0  
-Prepare your webMethods installation - your installation can contain only a plain Integration Server
 2. Google Chrome Version 58.0
   
-**Note: Currently SKY Profiler Runtime works only with webMethods Integration Server installed on Linux box.  
-	The User Interface is tested on Google Chrome 58.0  
-	The Service Summary Table shows only the latest data from the SKYProfiler server start. If there were services executed before server start those will be not be shown. However the report will show all the data.**
+Note:    
+ 1. Currently SKY Profiler Runtime works only with webMethods Integration Server installed on Linux box.   
+ 2. The Service Summary Table shows only the latest data. If there were services executed before SKY Profiler server start those will be not be shown. However the report will show all the data.
 
 ## Set-up
 
 ### Pre-requisite
 
-The project needs below software as a pre-requisite to get started.
+The project needs below software as a pre-requisite to get started. 
 * Apache Ant
 * Apache Maven
 * MongoDB
 * Zookeeper
 * Apache Kafka
 
+**MongoDB**  
+MongoDB will be used to store the executed service data. To install and configure MongoDB refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/doc/FAQ.txt)  
+Start the service  
+```
+C:\Program Files\MongoDB\Server\3.4\bin> mongod.exe --dbpath="C:\Program Files\MongoDB\data"
+```
+
+**Zookeeper**  
+Zookeeper is used to provide distributed configuration service for Kafka. To install and configure Zookeeper refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/doc/FAQ.txt)  
+Start the service  
+```
+C:\zookeeper-3.4.9\bin> zkServer.cmd
+```
+
+**Apache Kafka**  
+Kafka is a distributed messsaging system used for sending events from SKY Profiler Runtime to SKY Profiler Server. To install and configure Kafka refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/doc/FAQ.txt)  
+Start the service
+```
+C:\kafka_2.11-0.10.1.1\bin\windows> kafka-server-start.bat ..\..\config\server.properties
+```
+
+### SKY Profiler
 Download SKY Profiler by
 ```
 git clone https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler
 ```
  
+SKY Profiler Server requires Apache Ant and Apache Maven to be present in the machine for build process. To install and configure Apache Ant and Apache Maven refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/doc/FAQ.txt)  
 Update maven path in _build.properties_.  
-Create a data directory _data_ for MongoDB. (E.g., ```C:\Program Files\MongoDB\data```)  
-Copy ```{sky-profiler_home}/zookeeper config/zoo.cfg``` to ```C:/zookeeper-3.4.9/conf```
-Edit _zookeeper.properties_ in Apache Kafka to update the Data Directory location to C:/zookeeper-3.4.9/temp  
-Edit _server.properties_ in Apache Kafka to update the Log Directory location to ```C:/kafka_2.11-0.10.1.1/kafka-logs```. Add _auto.create.topics.enable=true_ property at the end of the _server.properties_.  
-Copy _wm-isclient.jar_ and _wm-isserver.jar_ from webMethods Integration Server installation to ```{sky-profiler_home}\libraries``` which are required for SKY Profiler Runtime component.
+Copy _wm-isclient.jar_ and _wm-isserver.jar_ from webMethods Integration Server installation to ```{webMethods-IntegrationServer-SKYProfiler}\libraries``` which are required for SKY Profiler Runtime component.
+Update MongoDB and Kafka configuration in ```{webMethods-IntegrationServer-SKYProfiler}\SKYProfilerServer\src\main\application.properties```  
 
-### Build
-Before you run the command below make sure MongoDB, Zookeeper and Apache Kafka are started in the below fasion
-* MongoDB
-```
-mongod.exe --dbpath=```"C:\Program Files\MongoDB\data"```
-```
-
-* Zookeeper
-```
-zkServer.cmd
-```
-
-* Apache Kafka
-```
-kafka-server-start.bat ..\..\config\server.properties
-```
+**Build and Run SKY Profiler** 
 
 * Build SKY Profiler
+SKY Profiler build requires the following services to be up and running
+1. MongoDB
+2. Zookeeper
+3. Apache Kafka
+
 ```
-ant all
+C:\{webMethods-IntegrationServer-SKYProfiler}> ant all
 ```
 
-The above command will build SKYProfiler.zip (webMethods Integration Server package) and skyprofiler-1.0-RELEASE.jar inside ```{sky-profiler_home}\dist``` directory. 
+The above command will create SKYProfiler.zip (webMethods Integration Server package) and skyprofiler-1.0-RELEASE.jar inside ```{webMethods-IntegrationServer-SKYProfiler}\dist``` directory. 
+
+Install the SKYProfiler package in the Integration Server which needs to be monitored. Refer webMethods_Integration_Server_Administrators_Guide section "Installing and Updating Packages on a Server Instance" on how to install the package.  
+
+* To start SKY Profiler Server
+```
+C:\{webMethods-IntegrationServer-SKYProfiler}\dist> java -jar skyprofiler-1.0-RELEASE.jar
+```
+Once the service is up, you could access the application in the URL http://localhost:8080.  
+Default Login Credentials: admin/password1234
 
 ## How it works
 
-Install the SKYProfiler package in the Integration Server which needs to be monitored.
-
-**SKY Profiler Server requires the following services to be running to start-up**
-* MongoDB
-* Zookeeper
-* Apache Kafka
-SKY Profiler Server
-```
-java -jar skyprofiler-1.0-RELEASE.jar
-```
-
-Once the service is up, you could access the application on http://localhost:8080.  
-Default credentials: admin/password1234
-
-
 ### Quick Start
-	* Add a webMethods Integration Server which needs to be monitored and click on the server added
+	* Login to the application
+	* Add webMethods Integration Server which needs to be monitored
+	* Select the added server
 	* Navigate to Options->Configuration
 	* Select the Package which needs to be monitored
 	* Fill-in other details and Save
 	* Click on Start to start monitoring
-	* Any service execution that belongs to the selected will get displayed in the Service Monitoring table
+	* Any service execution that belongs to the selected package/s will get displayed in the Service Monitoring table
 		
-### To obtain detailed information:
+### To obtain detailed information
 	* Click on the service name to expand the collapsible bar
 	* A Response Time graph will be shown (Only the latest service execution reponse time will be displayed)
-	* Click on one of the data point in the graph for further details. This will display Service Call Tree
-	* Service call tree displays service hierarchy
-	* This will show you which service is taking more time to execute
-	* You could then click on the Graph icon corresponding to that service, which then opens up a window containing graphs like CPU, Response time, Threat Level CPU, etc
-	* Click on the data point in one of the graphs to highlight the correlation line across all the graphs 
-	* These graphs help you map the spiked response time with other performance parameters to decide which resource parameter could have caused the spike
+	* Click on one of the data point in the graph to get Service Call Tree
+	* Service call tree displays service hierarchy and it shows the service level break-ups
+	* You could then click on the Graph icon corresponding to that service which is taking more time
+	* This opens up a modal window containing graphs like CPU, Response time, Threat Level CPU, etc
+	* Click on the data point in one of the graphs to highlight the correlation line across all the graphs
+	* These graphs help you map the response time with other performance parameters
 		
-### Report generation:
+### Report generation
 After all the profiling is completed you could generate a report as follows:
-		
-	* Navigate to home screen
-	* Click on Options->Report
-	* An HTML report is generated
-	
-## Notice
-You could have MongoDB, Zookeeper and Apache Kafka running in different machines. The relevant information should be updated in each of the servers as required and in SKY Profiler Server _application.properties_ need to be updated.
 
+	* Click on Options->Report
+	* An HTML report will be generated
+	
 Contact us at [TECHcommunity](mailto:technologycommunity@softwareag.com?subject=Github/SoftwareAG) if you have any questions.

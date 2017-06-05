@@ -1,0 +1,64 @@
+1.	How to setup Apache Ant?
+
+	Download Apache Ant 1.9.9 from the following location (available as of writing this Readme):
+	http://mirror.fibergrid.in/apache//ant/binaries/apache-ant-1.9.9-bin.zip
+	
+	Extract Ant in the C drive. Post extract you should see Ant as in the following location:
+	"C:\apache-ant-1.9.7\bin"
+	Set path for Ant in the Environment Variable PATH.
+
+2.  How to setup Apache Maven?
+
+	Download Apache Maven 2.11 from the following location (available as of writing this Readme):
+	https://archive.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+
+	Extract Maven in the C drive. Post extract you should see Maven as in the following location:
+	"C:\apache-maven-3.3.9\bin"
+	
+	Note: Maven should be extracted as mentioned above since it is referred in the build.properties.
+	Set path for Maven in the Environment Variable PATH.
+
+3.	How to setup MongoDB?
+
+	Download and install MongoDB 3.4.1 from the following location (available as of writing this Readme):
+	http://downloads.mongodb.org/win32/mongodb-win32-x86_64-2008plus-ssl-3.4.1-signed.msi?_ga=2.176440864.488940317.1495166987-1374036802.1495166987
+	
+	Post installation you will find the MongoDB installed in the following location:
+	"C:\Program Files\MongoDB"
+	
+	Create a data directory in "C:\Program Files\MongoDB":
+	C:\Program Files\MongoDB>mkdir data
+	
+	Start MongoDB:
+	mongod.exe --dbpath="C:\Program Files\MongoDB\data"
+
+4.	How to setup Zookeeper?
+
+	Download Zookeeper 3.4.9 from the following location (available as of writing this Readme):
+	http://mirror.fibergrid.in/apache/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
+	
+	Extract Zookeeper in the C drive. Post extract you should see Zookeeper as in the following location:
+	"C:\zookeeper-3.4.9\bin"
+	
+	Rename C:\zookeeper-3.4.9\conf\zoo_sample.cfg to zoo.cfg
+	Start Zookeeper:
+	C:\zookeeper-3.4.9\bin>zkServer.cmd
+
+5.	How to setup Apache Kafka?
+
+	Download Apache Kafka 2.11 from the following location (available as of writing this Readme):
+	http://mirror.fibergrid.in/apache/kafka/0.10.1.1/kafka_2.11-0.10.1.1.tgz
+	
+	Extract Kafka in the C drive. Post extract you should see Kafka as in the following location:
+	"C:\kafka_2.11-0.10.1.1\bin\windows"
+	
+	Edit _zookeeper.properties_ in Apache Kafka to update the Data Directory location to C:/zookeeper-3.4.9/temp  
+	Edit _server.properties_ in Apache Kafka to update the Log Directory location to ```C:/kafka_2.11-0.10.1.1/kafka-logs```. Add _auto.create.topics.enable=true_ property at the 	end of the _server.properties_.  
+	
+6. What topic name should I give in Options->Configuration?
+
+	By default, the topic name should be pre-populated with server name provided in the User Interface while adding the server. If not present then provide the topic name same as the server name and it is case sensitive. 
+	
+7. I don't have an External Server to which Integration Server is talking to. What should I mention?
+
+	If the Integration Server communicates with an external server you should add it otherwise you can leave it blank.
