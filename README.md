@@ -16,6 +16,7 @@ The project was developed and tested on the following installation:
 Note:    
  1. Currently SKY Profiler Runtime works only with webMethods Integration Server installed on Linux box.   
  2. The Service Summary Table shows only the latest data. If there were services executed before SKY Profiler server start those will be not be shown. However the report will show all the data.
+ 3. SKY Profiler supports Disk Interface 'sda' to gather disk activity statistics for current implementation.
 
 ## Set-up
 
@@ -52,13 +53,13 @@ C:\kafka_2.11-0.10.1.1\bin\windows> kafka-server-start.bat ..\..\config\server.p
 ### SKY Profiler
 Download SKY Profiler by
 ```
-git clone https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler
+git clone https://github.com/SoftwareAG/webmethods-integrationserver-skyprofiler
 ```
  
-SKY Profiler Server requires Apache Ant and Apache Maven to be present in the machine for build process. To install and configure Apache Ant and Apache Maven refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/blob/master/doc/FAQ.txt)  
+SKY Profiler Server requires Apache Ant and Apache Maven to be present in the machine for build process. To install and configure Apache Ant and Apache Maven refer [FAQ](https://github.com/SoftwareAG/webmethods-integrationserver-skyprofiler/blob/master/doc/FAQ.txt)  
 Update maven path in _build.properties_.  
-Copy _wm-isclient.jar_ and _wm-isserver.jar_ from webMethods Integration Server installation to ```{webMethods-IntegrationServer-SKYProfiler}\libraries``` which are required for SKY Profiler Runtime component.
-Update MongoDB and Kafka configuration in ```{webMethods-IntegrationServer-SKYProfiler}\SKYProfilerServer\src\main\application.properties```  
+Copy _wm-isclient.jar_ and _wm-isserver.jar_ from webMethods Integration Server installation to ```{webmethods-integrationserver-skyprofiler}\libraries``` which are required for SKY Profiler Runtime component.
+Update MongoDB and Kafka configuration in ```{webmethods-integrationserver-skyprofiler}\source\SKYProfilerServer\src\main\resources\application.properties```  
 
 **Build and Run SKY Profiler** 
 
@@ -69,16 +70,16 @@ SKY Profiler build requires the following services to be up and running
 3. Apache Kafka
 
 ```
-C:\{webMethods-IntegrationServer-SKYProfiler}> ant all
+C:\webmethods-integrationserver-skyprofiler}> ant all
 ```
 
-The above command will create SKYProfiler.zip (webMethods Integration Server package) and skyprofiler-1.0-RELEASE.jar inside ```{webMethods-IntegrationServer-SKYProfiler}\dist``` directory. 
+The above command will create SKYProfiler.zip (webMethods Integration Server package) and skyprofiler-1.0-RELEASE.jar inside ```{webmethods-integrationserver-skyprofiler}\dist``` directory. 
 
 Install the SKYProfiler package in the Integration Server which needs to be monitored. Refer webMethods_Integration_Server_Administrators_Guide section "Installing and Updating Packages on a Server Instance" on how to install the package.  
 
 * To start SKY Profiler Server
 ```
-C:\{webMethods-IntegrationServer-SKYProfiler}\dist> java -jar skyprofiler-1.0-RELEASE.jar
+C:\{webmethods-integrationserver-skyprofiler}\dist> java -jar skyprofiler-1.0-RELEASE.jar
 ```
 Once the service is up, you could access the application in the URL http://localhost:8080.  
 Default Login Credentials: admin/password1234
