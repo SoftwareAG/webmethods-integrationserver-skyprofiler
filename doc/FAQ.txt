@@ -62,3 +62,78 @@
 7. I don't have an External Server to which Integration Server is talking to. What should I mention?
 
 	If the Integration Server communicates with an external server you should add it otherwise you can leave it blank.
+
+8. When I try to start MongoDB by running the command 'mongod.exe --dbpath="C:\Program Files\MongoDB\data"' I get the following exception
+
+	C:\Program Files\MongoDB\Server\3.4\bin>mongod.exe --dbpath="C:\Program Files\Mo
+	ngoDB\data"
+	2017-06-07T11:01:14.984+0530 I CONTROL  [initandlisten] MongoDB starting : pid=6
+	260 port=27017 dbpath=C:\Program Files\MongoDB\data 64-bit host=MCSSUD01
+	2017-06-07T11:01:14.986+0530 I CONTROL  [initandlisten] targetMinOS: Windows 7/W
+	indows Server 2008 R2
+	2017-06-07T11:01:14.986+0530 I CONTROL  [initandlisten] db version v3.4.1
+	2017-06-07T11:01:14.987+0530 I CONTROL  [initandlisten] git version: 5e103c4f558
+	3e2566a45d740225dc250baacfbd7
+	2017-06-07T11:01:14.987+0530 I CONTROL  [initandlisten] OpenSSL version: OpenSSL
+	 1.0.1t-fips  3 May 2016
+	2017-06-07T11:01:14.988+0530 I CONTROL  [initandlisten] allocator: tcmalloc
+	2017-06-07T11:01:14.988+0530 I CONTROL  [initandlisten] modules: none
+	2017-06-07T11:01:14.989+0530 I CONTROL  [initandlisten] build environment:
+	2017-06-07T11:01:14.989+0530 I CONTROL  [initandlisten]     distmod: 2008plus-ss
+	l
+	2017-06-07T11:01:14.989+0530 I CONTROL  [initandlisten]     distarch: x86_64
+	2017-06-07T11:01:14.990+0530 I CONTROL  [initandlisten]     target_arch: x86_64
+	2017-06-07T11:01:14.990+0530 I CONTROL  [initandlisten] options: { storage: { db
+	Path: "C:\Program Files\MongoDB\data" } }
+	2017-06-07T11:01:14.991+0530 I STORAGE  [initandlisten] exception in initAndList
+	en: 20 Attempted to create a lock file on a read-only directory: C:\Program File
+	s\MongoDB\data, terminating
+	2017-06-07T11:01:14.991+0530 I NETWORK  [initandlisten] shutdown: going to close
+	 listening sockets...
+	2017-06-07T11:01:14.992+0530 I NETWORK  [initandlisten] shutdown: going to flush
+	 diaglog...
+	2017-06-07T11:01:14.992+0530 I CONTROL  [initandlisten] now exiting
+	2017-06-07T11:01:14.993+0530 I CONTROL  [initandlisten] shutting down with code:
+	100
+	
+	Solution:
+		You are probably running the command as a low privileged use.
+		Invoke command prompt in "Run as Administrator" mode and try to start MongoDB again.
+		
+9. When I try to start Kafka by running the command 'kafka-server-start.bat ..\..\config\server.properties' I get the following error
+
+	C:\kafka_2.11-0.10.1.1\bin\windows>kafka-server-start.bat ..\..\config\server.pr
+	operties
+	'wmic' is not recognized as an internal or external command,
+	operable program or batch file.
+	
+	Solution: 
+		Append Environment PATH variable with the following location
+		"C:\Windows\System32\wbem;C:\Windows\System32;"
+		
+		C:\Windows\System32\wbem 	- has path for "wmic"
+		C:\Windows\System32			- has path for "find"
+		
+10. When I try to build by running the command 'ant all' I get the following error
+
+	C:\webMethods-IntegrationServer-SKYProfiler-master>ant all
+	Buildfile: C:\webMethods-IntegrationServer-SKYProfiler-master\build.xml
+
+	init.maven:
+		  [get] Getting: http://central.maven.org/maven2/org/apache/maven/maven-ant-
+	tasks/2.1.3/maven-ant-tasks-2.1.3.jar
+		  [get] To: C:\webMethods-IntegrationServer-SKYProfiler-master\libraries\mav
+	en-ant-tasks-2.1.3.jar
+		  [get] Not modified - so not downloaded
+
+	clean:
+
+	BUILD FAILED
+	C:\webMethods-IntegrationServer-SKYProfiler-master\build.xml:26: C:\webMethods-I
+	ntegrationServer-SKYProfiler-master\apache-maven-3.3.9\boot does not exist.
+
+	Total time: 0 seconds
+	
+	Solution:
+		You might have set maven.home property as "maven.home=C:\apache-maven-3.3.9" in build.properties
+		Change it to "maven.home=C:/apache-maven-3.3.9"
