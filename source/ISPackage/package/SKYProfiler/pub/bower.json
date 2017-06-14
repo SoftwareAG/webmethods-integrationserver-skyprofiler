@@ -1,0 +1,25 @@
+{
+  "name": "webMethods-IntegrationServer-SKYProfiler-ISPackage",
+  "homepage": "https://github.com/SoftwareAG/webmethods-integrationserver-skyprofiler",
+  "authors": [
+    "kumarjyashwanth@gmail.com"
+  ],
+  "description": "SKY Profiler Integration Server package",
+  "main": "dashboard.dsp",
+  "keywords": [
+    "profiler",
+    "monitor",
+    "performance",
+    "bottleneck",
+    "webmethods",
+    "Integration",
+    "Server"
+  ],
+  "license": "Apache License 2.0",
+  "dependencies": {
+    "nya-bootstrap-select": "git://github.com/lordfriend/nya-bootstrap-select#^2.4.0",
+    "bootstrap": "^3.3.7",
+    "angular-ui-notification": "^0.3.6",
+    "angular-bootstrap": "^2.5.0"
+  }
+}
