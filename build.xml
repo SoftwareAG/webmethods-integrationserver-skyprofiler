@@ -86,6 +86,18 @@
 			<fileset dir="${skyprofiler.runtime.package}" />
 		</copy>
 		
+		<exec executable="cmd" dir="${basedir}/${skyprofiler.target.dir}/SKYProfiler/pub" osfamily="windows">
+		    <arg value="/c"/>
+			<arg value="bower"/>
+			<arg value="update"/>
+		</exec>
+		
+		<exec executable="bash" dir="${basedir}/${skyprofiler.target.dir}/SKYProfiler/pub" osfamily="unix">
+		    <arg value="-c"/>
+			<arg value="bower"/>
+			<arg value="update"/>
+		</exec>
+		
 		<mkdir dir="${skyprofiler.target.dir}/SKYProfiler/code/jars" />
 		
 		<get src="http://central.maven.org/maven2/org/apache/kafka/kafka-clients/0.9.0.1/kafka-clients-0.9.0.1.jar" 
