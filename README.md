@@ -27,6 +27,7 @@ The project needs below software as a pre-requisite to get started.
 * MongoDB
 * Zookeeper
 * Apache Kafka
+* bower
 
 **MongoDB**  
 MongoDB will be used to store the executed service data. To install and configure MongoDB refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/blob/master/doc/FAQ.txt)  
@@ -55,10 +56,11 @@ Download SKY Profiler by
 git clone https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler
 ```
  
-SKY Profiler Server requires Apache Ant and Apache Maven to be present in the machine for build process. To install and configure Apache Ant and Apache Maven refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/blob/master/doc/FAQ.txt)  
+SKY Profiler Server requires Apache Ant, Apache Maven and bower to be present in the machine for build process. To install and configure Apache Ant and Apache Maven refer [FAQ](https://github.com/SoftwareAG/webMethods-IntegrationServer-SKYProfiler/blob/master/doc/FAQ.txt)  
 Update maven path in _build.properties_.  
 Copy _wm-isclient.jar_ and _wm-isserver.jar_ from webMethods Integration Server installation to ```{webMethods-IntegrationServer-SKYProfiler}\libraries``` which are required for SKY Profiler Runtime component.
 Update MongoDB and Kafka configuration in ```{webMethods-IntegrationServer-SKYProfiler}\SKYProfilerServer\src\main\application.properties```  
+bower will be used to resolve JS and CSS dependencies
 
 **Build and Run SKY Profiler** 
 
