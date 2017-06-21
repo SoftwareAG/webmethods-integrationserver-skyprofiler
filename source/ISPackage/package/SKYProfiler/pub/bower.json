@@ -20,6 +20,6 @@
     "nya-bootstrap-select": "git://github.com/lordfriend/nya-bootstrap-select#^2.4.0",
     "bootstrap": "^3.3.7",
     "angular-ui-notification": "^0.3.6",
-    "angular-bootstrap": "^2.5.0"
+    "angular-bootstrap": "0.13.3"
   }
 }
