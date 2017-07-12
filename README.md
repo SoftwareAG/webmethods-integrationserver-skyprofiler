@@ -71,7 +71,7 @@ SKY Profiler build requires the following services to be up and running
 3. Apache Kafka
 
 ```
-C:\{webMethods-IntegrationServer-SKYProfiler}> ant all
+C:\{webMethods-IntegrationServer-SKYProfiler}> ant
 ```
 
 The above command will create SKYProfiler.zip (webMethods Integration Server package) and skyprofiler-1.0-RELEASE.jar inside ```{webMethods-IntegrationServer-SKYProfiler}\dist``` directory. 
