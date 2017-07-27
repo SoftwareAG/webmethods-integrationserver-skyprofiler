@@ -15,6 +15,45 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-install-plugin</artifactId>
+			    <version>2.5.2</version>
+			    <executions>
+			        <execution>
+			            <id>install-wm-isserver</id>
+			            <phase>clean</phase>
+			            <configuration>
+			                <file>${basedir}/lib/wm-isserver.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>org.softwareag</groupId>
+			                <artifactId>is-server</artifactId>
+			                <version>1.0</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+			            </configuration>
+			            <goals>
+			                <goal>install-file</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+			            <id>install-wm-isclient</id>
+			            <phase>clean</phase>
+			            <configuration>
+			                <file>${basedir}/lib/wm-isclient.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>org.softwareag</groupId>
+			                <artifactId>is-client</artifactId>
+			                <version>1.0</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+			            </configuration>
+			            <goals>
+			                <goal>install-file</goal>
+			            </goals>
+			        </execution>
+			    </executions>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -66,16 +105,12 @@
 		<dependency>
 			<groupId>org.softwareag</groupId>
 			<artifactId>is-server</artifactId>
-         	<scope>system</scope>
          	<version>1.0</version>
-         	<systemPath>${basedir}\lib\wm-isserver.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.softwareag</groupId>
 			<artifactId>is-client</artifactId>
-         	<scope>system</scope>
          	<version>1.0</version>
-         	<systemPath>${basedir}\lib\wm-isclient.jar</systemPath>
 		</dependency>
 		
 	</dependencies>
