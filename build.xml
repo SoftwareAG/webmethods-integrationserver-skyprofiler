@@ -3,22 +3,21 @@
 
     <property file="build.properties" />
 
+	<property environment="env" />
+
     <path id="classpath">
         <fileset dir="${skyprofiler.lib.dir}" includes="**/*.jar" />
     </path>
 
     <!-- Maven task Initialization -->
     <target name="init.maven">
-        <fail message="Property &quot;maven.home&quot; needs to be set. Update the same in build.properties.">
-            <condition>
-                <or>
-                    <not>
-                        <isset property="maven.home" />
-                    </not>
-                    <equals arg1="${maven.home}" arg2="" />
-                </or>
-            </condition>
-	    </fail>
+	    <property name="env.MAVEN_HOME" value="${maven.home}" />
+		
+        <fail message="Property &quot;maven.home&quot; needs to be set. Set the same in build.properties or set MAVEN_HOME environment variable.">
+		    <condition>
+			    <equals arg1="${env.MAVEN_HOME}" arg2="" trim="true" />
+			</condition>
+		</fail>
 
 		<mkdir dir="${skyprofiler.lib.dir}" />
 		
@@ -32,33 +31,7 @@
                 classpathref="maven-ant-tasks.classpath" />
     </target>
 
-    <!-- Clean SKY Profiler runtime -->
-    <target name="runtime.clean" description="Cleaning SKY Profiler server and runtime projects" depends="init.maven">
-	    <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${maven.home}" fork="true" failonerror="true">
-	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
-	        <arg value="clean" />
-	    </artifact:mvn>
-
-		<delete includeemptydirs="true" failonerror="false">
-		    <fileset dir="${skyprofiler.runtime.dir}/lib" includes="wm-is*.jar" />
-			<fileset dir="${skyprofiler.target.dir}" includes="*.zip" />
-		</delete>
-    </target>
-	
-    <!-- Clean SKY Profiler server -->
-    <target name="server.clean" description="Cleaning SKY Profiler server and runtime projects" depends="init.maven">
-		<artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${maven.home}" fork="true" failonerror="true">
-	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
-	        <arg value="clean" />
-	    </artifact:mvn>
-
-		<delete includeemptydirs="true" failonerror="false">
-			<fileset dir="${skyprofiler.server.dir}/src/main/resources/static/fonts" />
-		    <fileset dir="${skyprofiler.target.dir}" includes="*.jar" />
-		</delete>
-    </target>
-
-    <!-- Initialization -->
+	<!-- Initialization -->
     <target name="init" description="Generic initialization steps for the project">
         <mkdir dir="${skyprofiler.target.dir}" />
     </target>
@@ -78,9 +51,40 @@
 	        dest="${skyprofiler.server.dir}/src/main/resources/static/fonts/glyphicons-halflings-regular.woff2" usetimestamp="true" />
     </target>
 
+    <!-- Clean SKY Profiler runtime -->
+    <target name="runtime.clean" description="Cleaning SKY Profiler server and runtime projects" depends="init.maven, runtime.init">
+	    <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${env.MAVEN_HOME}" fork="true" failonerror="true">
+	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
+	        <arg value="clean" />
+	    </artifact:mvn>
+
+		<delete includeemptydirs="true" failonerror="false">
+		    <fileset dir="${skyprofiler.runtime.dir}/lib" includes="wm-is*.jar" />
+			<fileset dir="${skyprofiler.target.dir}" includes="*.zip" />
+		</delete>
+    </target>
+
+    <!-- Clean SKY Profiler server -->
+    <target name="server.clean" description="Cleaning SKY Profiler server and runtime projects" depends="init.maven">
+		<artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${env.MAVEN_HOME}" fork="true" failonerror="true">
+	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
+	        <arg value="clean" />
+	    </artifact:mvn>
+
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${skyprofiler.server.dir}/src/main/resources/static/fonts" />
+		    <fileset dir="${skyprofiler.target.dir}" includes="*.jar" />
+		</delete>
+    </target>
+
+	<!-- Clean all -->
+    <target name="clean" depends="runtime.clean, server.clean">
+		<echo message="Cleaning completed for SKY Profiler runtime and server." />
+    </target>
+
     <!-- Compile and build SKY Profiler runtime -->
     <target name="runtime.jar" description="Compiles the sources and creates SKY Profiler runtime jar" depends="runtime.clean, runtime.init">
-	    <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${maven.home}" fork="true" failonerror="true">
+	    <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${env.MAVEN_HOME}" fork="true" failonerror="true">
 	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
 	        <arg value="package" />
 			<arg value="-DskipTests" />
@@ -89,14 +93,14 @@
 
     <!-- Compile and build SKY Profiler server -->
     <target name="server.jar" description="Compiles the sources and creates SKY Profiler server jar" depends="server.clean, server.init">
-	    <artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${maven.home}" fork="true" failonerror="true">
+	    <artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${env.MAVEN_HOME}" fork="true" failonerror="true">
 	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
 	        <arg value="package" />
 			<arg value="-DskipTests" />
 	    </artifact:mvn>
     </target>
 
-	<!-- Creating ISPackage -->
+	<!-- Building ISPackage -->
 	<target name="runtime.build" description="Builds runtime jar, Copy IS package files, place the jar and zip them together to create IS package" depends="runtime.jar">
 		<copy todir="${skyprofiler.target.dir}">
 			<fileset dir="${skyprofiler.runtime.package}" />
@@ -130,16 +134,14 @@
         <delete dir="${skyprofiler.target.dir}/SKYProfiler" />
 	</target>
 
+	<!-- Building SKY Profiler Server -->
 	<target name="server.build" description="Creates SKY Profiler server jar" depends="server.jar">
 		<copy todir="${skyprofiler.target.dir}">
 			<fileset file="${skyprofiler.server.dir}/target/*.jar" />
 		</copy>
 	</target>
 
-    <target name="clean" depends="runtime.clean, server.clean">
-		<echo message="Cleaning completed for SKY Profiler runtime and server." />
-    </target>
-
+	<!-- Complete build [IS Package and Server jar] -->
     <target name="build" depends="runtime.build, server.build">
 		<echo message="Build execution completed for SKY Profiler runtime and server. The binaries are placed at - ${skyprofiler.target.dir}" />
     </target>
