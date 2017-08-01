@@ -104,10 +104,8 @@ public class ResourceStatisticsCollector {
 		time.schedule(stDisk, 0, 1000);
 
 		// Collect network statistics for every one second
-		if (!(externalHostname == null || externalHostname.equals(""))) {
-			ScheduledTaskNetworkStats stNW = new ScheduledTaskNetworkStats(externalHostname);
-			time.schedule(stNW, 0, 1000);
-		}
+		ScheduledTaskNetworkStats stNW = new ScheduledTaskNetworkStats(externalHostname);
+		time.schedule(stNW, 0, 1000);
 
 		// Collect cpu statistics for every one second
 		ScheduledTaskCPUStats stCPU = new ScheduledTaskCPUStats();
