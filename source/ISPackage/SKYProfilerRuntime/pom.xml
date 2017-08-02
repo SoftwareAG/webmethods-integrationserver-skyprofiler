@@ -112,7 +112,16 @@
 			<artifactId>is-client</artifactId>
          	<version>1.0</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.github.dblock</groupId>
+			<artifactId>oshi-core</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.java.dev.jna</groupId>
+			<artifactId>jna-platform</artifactId>
+			<version>4.4.0</version>
+		</dependency>
 	</dependencies>
 	<name>SKY Profiler Runtime</name>
 	<description>SKY Profiler runtime in Integration server monitors service execution, and pushes the Monitored Service data to kafka topics which are mapped to each Integration server</description>
