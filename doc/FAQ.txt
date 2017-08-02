@@ -62,3 +62,12 @@
 7. I don't have an External Server to which Integration Server is talking to. What should I mention?
 
 	If the Integration Server communicates with an external server you should add it otherwise you can leave it blank.
+
+8. Why does it say SKY Profiler supports only on [Linux box] or [Linux, Windows box]?
+
+    The resource data collection is not generic across different flavors of Operating System. Whichever operating system's resource statistics collection are implemented, those will be mentioned in the readme.
+
+9. What if i need support for a specific Operating System?
+
+    You can let us know which Operating System support you need. Based on the priority, the request will be added to the roadmap. Also, the source code is open source and the design is flexible to add support to the new Operating System. You can also contribute.
+	

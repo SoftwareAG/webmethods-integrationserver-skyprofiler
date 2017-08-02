@@ -14,7 +14,7 @@ The project was developed and tested on the following installation:
 2. Google Chrome Version 58.0
   
 Note:    
- 1. Currently SKY Profiler Runtime works only with webMethods Integration Server installed on Linux box.   
+ 1. Currently SKY Profiler Runtime works only with webMethods Integration Server installed on Linux and Windows box.   
  2. The Service Summary Table shows only the latest data. If there were services executed before SKY Profiler server start those will be not be shown. However the report will show all the data.
 
 ## Set-up
