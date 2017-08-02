@@ -119,9 +119,18 @@
 		</exec>
 		
 		<mkdir dir="${skyprofiler.target.dir}/SKYProfiler/code/jars" />
-		
+
 		<get src="http://central.maven.org/maven2/org/apache/kafka/kafka-clients/0.9.0.1/kafka-clients-0.9.0.1.jar" 
 	        dest="${skyprofiler.target.dir}/SKYProfiler/code/jars/kafka-clients-0.9.0.1.jar" usetimestamp="true" />
+
+		<get src="http://central.maven.org/maven2/com/github/dblock/oshi-core/3.3/oshi-core-3.3.jar" 
+	        dest="${skyprofiler.target.dir}/SKYProfiler/code/jars/oshi-core-3.3.jar" usetimestamp="true" />
+
+		<get src="http://central.maven.org/maven2/net/java/dev/jna/jna/4.4.0/jna-4.4.0.jar" 
+	        dest="${skyprofiler.target.dir}/SKYProfiler/code/jars/jna-4.4.0.jar" usetimestamp="true" />
+
+		<get src="http://central.maven.org/maven2/net/java/dev/jna/jna-platform/4.4.0/jna-platform-4.4.0.jar" 
+	        dest="${skyprofiler.target.dir}/SKYProfiler/code/jars/jna-platform-4.4.0.jar" usetimestamp="true" />
 
 		<copy tofile="${skyprofiler.target.dir}/SKYProfiler/code/jars/skyprofiler.jar">
 			<fileset file="${skyprofiler.runtime.dir}/target/*.jar" />
