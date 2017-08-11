@@ -11,12 +11,16 @@
 
     <!-- Maven task Initialization -->
     <target name="init.maven">
-	    <property name="env.MAVEN_HOME" value="${maven.home}" />
-		
-        <fail message="Property &quot;maven.home&quot; needs to be set. Set the same in build.properties or set MAVEN_HOME environment variable.">
+        <property name="mvn_home" value="${env.MAVEN_HOME}" />
+        <property name="mvn_home" value="${env.M2_HOME}" />
+        <property name="mvn_home" value="${maven.home}" />
+
+        <fail message="Path to &quot;maven_home&quot; must be set. You can set it in application build.properties or in either MAVEN_HOME or M2_HOME environment variable.">
 		    <condition>
-			    <equals arg1="${env.MAVEN_HOME}" arg2="" trim="true" />
-			</condition>
+                <and>
+                    <equals arg1="${mvn_home}" arg2="" trim="true" />
+                </and>
+            </condition>
 		</fail>
 
 		<mkdir dir="${skyprofiler.lib.dir}" />
@@ -53,7 +57,7 @@
 
     <!-- Clean SKY Profiler runtime -->
     <target name="runtime.clean" description="Cleaning SKY Profiler server and runtime projects" depends="init.maven, runtime.init">
-	    <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${env.MAVEN_HOME}" fork="true" failonerror="true">
+	    <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${mvn_home}" fork="true" failonerror="true">
 	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
 	        <arg value="clean" />
 	    </artifact:mvn>
@@ -66,7 +70,7 @@
 
     <!-- Clean SKY Profiler server -->
     <target name="server.clean" description="Cleaning SKY Profiler server and runtime projects" depends="init.maven">
-		<artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${env.MAVEN_HOME}" fork="true" failonerror="true">
+		<artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${mvn_home}" fork="true" failonerror="true">
 	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
 	        <arg value="clean" />
 	    </artifact:mvn>
@@ -84,7 +88,7 @@
 
     <!-- Compile and build SKY Profiler runtime -->
     <target name="runtime.jar" description="Compiles the sources and creates SKY Profiler runtime jar" depends="runtime.clean, runtime.init">
-	    <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${env.MAVEN_HOME}" fork="true" failonerror="true">
+	    <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${mvn_home}" fork="true" failonerror="true">
 	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
 	        <arg value="package" />
 			<arg value="-DskipTests" />
@@ -93,7 +97,7 @@
 
     <!-- Compile and build SKY Profiler server -->
     <target name="server.jar" description="Compiles the sources and creates SKY Profiler server jar" depends="server.clean, server.init">
-	    <artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${env.MAVEN_HOME}" fork="true" failonerror="true">
+	    <artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${mvn_home}" fork="true" failonerror="true">
 	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
 	        <arg value="package" />
 			<arg value="-DskipTests" />
