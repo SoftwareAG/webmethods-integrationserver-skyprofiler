@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk-alpine
 VOLUME /tmp
-ADD dist/skyprofiler-1.0-RELEASE.jar app.jar
+ADD target/webmethods-skyprofiler-1.0-RELEASE.jar app.jar
 
 ENV ZOOKEEPER_HOST localhost
 ENV MONGODB_HOST localhost

@@ -2,8 +2,7 @@ version: "3"
 
 services:
   app:
-    build:
-      context: .
+    image: lanimall/webmethods-skyprofiler
     environment:
       ZOOKEEPER_HOST: zookeeper
       MONGODB_HOST: db
@@ -12,8 +11,8 @@ services:
     networks:
       - skynet
     extra_hosts:
-     - "is1:${HOST1}"
-     - "is2:${HOST2}"
+     - "is1:${MONITORED_WM_HOST1}"
+     - "is2:${MONITORED_WM_HOST2}"
     depends_on:
       - db
       - zookeeper

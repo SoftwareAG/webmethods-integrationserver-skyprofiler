@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.softwareag.skyprofiler</groupId>
-	<artifactId>skyprofiler</artifactId>
+	<artifactId>webmethods-skyprofiler</artifactId>
 	<version>1.0-RELEASE</version>
 	<packaging>jar</packaging>
 
@@ -21,8 +21,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+        <java.version>1.8</java.version>
 		<spring-kafka.version>1.1.1.RELEASE</spring-kafka.version>
+        <docker.images.prefix>lanimall</docker.images.prefix>
+        <docker.images.repo>docker.io</docker.images.repo>
 	</properties>
 
 	<dependencies>
@@ -109,8 +111,50 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.4.14</version>
+                <configuration>
+                    <imageName>${docker.images.prefix}/${project.artifactId}:${project.version}</imageName>
+                    <dockerDirectory>${project.basedir}</dockerDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>build-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>tag-image-version</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>tag</goal>
+                        </goals>
+                        <configuration>
+                            <image>${docker.images.prefix}/${project.artifactId}:${project.version}</image>
+                            <newName>${docker.images.repo}/${docker.images.prefix}/${project.artifactId}:${project.version}</newName>
+                            <serverId>docker-hub</serverId>
+                            <pushImage>true</pushImage>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>tag-image-latest</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>tag</goal>
+                        </goals>
+                        <configuration>
+                            <image>${docker.images.prefix}/${project.artifactId}:${project.version}</image>
+                            <newName>${docker.images.repo}/${docker.images.prefix}/${project.artifactId}:latest</newName>
+                            <serverId>docker-hub</serverId>
+                            <pushImage>true</pushImage>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
-
-
 </project>
