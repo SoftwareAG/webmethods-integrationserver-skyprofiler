@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.softwareag.skyprofiler</groupId>
 	<artifactId>webmethods-skyprofiler</artifactId>
-	<version>1.0-RELEASE</version>
+	<version>1.0.2</version>
 	<packaging>jar</packaging>
 
 	<name>SKY Profiler</name>
@@ -112,24 +111,34 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>
+            <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.4.14</version>
                 <configuration>
-                    <imageName>${docker.images.prefix}/${project.artifactId}:${project.version}</imageName>
+                    <imageName>${docker.images.prefix}/${project.artifactId}</imageName>
+                    <newName>${docker.images.repo}/${docker.images.prefix}/${project.artifactId}</newName>
                     <dockerDirectory>${project.basedir}</dockerDirectory>
+                    <forceTags>true</forceTags>
+                    <serverId>docker-hub</serverId>
+                    <imageTags>
+                        <imageTag>${project.version}</imageTag>
+                        <imageTag>latest</imageTag>
+                    </imageTags>
                 </configuration>
                 <executions>
                     <execution>
                         <id>build-image</id>
-                        <phase>package</phase>
                         <goals>
                             <goal>build</goal>
                         </goals>
                     </execution>
                     <execution>
                         <id>tag-image-version</id>
-                        <phase>install</phase>
                         <goals>
                             <goal>tag</goal>
                         </goals>
@@ -142,7 +151,6 @@
                     </execution>
                     <execution>
                         <id>tag-image-latest</id>
-                        <phase>install</phase>
                         <goals>
                             <goal>tag</goal>
                         </goals>
