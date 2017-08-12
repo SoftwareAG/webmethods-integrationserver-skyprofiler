@@ -17,7 +17,57 @@ Note:
  1. Currently SKY Profiler Runtime works only with webMethods Integration Server installed on Linux and Windows box.   
  2. The Service Summary Table shows only the latest data. If there were services executed before SKY Profiler server start those will be not be shown. However the report will show all the data.
 
-## Set-up
+## Set-up with Docker
+
+
+### Required tools
+
+With docker, nothing else is needed but Docker engine and Docker-compose. (not even JAVA, ANT, etc...)
+
+* [Docker engine](https://www.docker.com/products/overview)
+* [Docker compose](https://docs.docker.com/compose/install/)
+
+### Start SkyProfiler and related components
+
+ 1. Download the docker-compose file and save it anywhere on your docker-enabled workstation or server
+ 
+ Click [skyprofiler docker-compose](./docker-compose.yml)
+
+ 2. Set some required environment variables
+ 
+```bash
+export KAFKA_ADVERTISED_HOST_NAME=$(hostname)
+export MONITORED_WM_HOST1=<IP for IS1>
+export MONITORED_WM_HOST2=<IP for IS2>
+```
+
+**Notes:**
+ * KAFKA_ADVERTISED_HOST_NAME is needed so the Kafka component can be accessed from external servers (like the wM IS to be monitored)
+ * MONITORED_WM_HOST variables are currently needed so the docker instance can route network requests to the external IS nodes to monitor
+    (__TODO Fabien or others__: This is needed currently because the docker host's DNS server is not shared with the docker instances, but a better more generic way surely can be put in place)
+ If you need more than 2 (very likely), currently you can simply modify the [docker-compose.yml](./docker-compose.yml) and add more hosts in the "extra_hosts" parameter.
+ 
+ 3. Start SkyProfiler and related components
+
+```bash
+docker-compose up -d
+```
+
+All the needed images will be downloaded from docker-hub and started in the right order, ready to operate.
+
+ 4. Open Skyprofiler Web UI
+
+Once all docker instances are up and running (less than 1 minute), click [Skyprofiler Web UI](https://localhost:8080)
+
+NOTE: if you started the Skyprofiler server on another machine, replace localhost with the docker VM IP address
+
+ 5. Login
+ 
+ Default Login Credentials: admin/password1234
+ 
+ 6. Then, go to [How it works](#how_it_works) for configurations.
+
+## Set-up without Docker
 
 ### Pre-requisite
 
