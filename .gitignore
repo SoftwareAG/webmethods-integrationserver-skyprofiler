@@ -54,6 +54,7 @@ bin/**
 
 #log files
 *.log
+/data
 
 # misc #
 ##############
