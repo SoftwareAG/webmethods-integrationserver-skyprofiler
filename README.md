@@ -22,7 +22,7 @@ Note:
 
 ### Required tools
 
-With docker, nothing else is needed but Docker engine and Docker-compose. (not even JAVA, ANT, etc...)
+With docker, nothing else is needed but Docker engine and Docker-compose (not even JAVA, ANT, etc...)
 
 * [Docker engine](https://www.docker.com/products/overview)
 * [Docker compose](https://docs.docker.com/compose/install/)
@@ -37,16 +37,18 @@ With docker, nothing else is needed but Docker engine and Docker-compose. (not e
  
 ```bash
 export KAFKA_ADVERTISED_HOST_NAME=$(hostname)
-export MONITORED_WM_HOST1=<IP for IS1>
-export MONITORED_WM_HOST2=<IP for IS2>
+export MONITORED_WM_HOST1=127.0.0.1
+export MONITORED_WM_HOST2=127.0.0.1
 ```
 
 **Notes:**
- * KAFKA_ADVERTISED_HOST_NAME is needed so the Kafka component can be accessed from external servers (like the wM IS to be monitored)
- * MONITORED_WM_HOST variables are currently needed so the docker instance can route network requests to the external IS nodes to monitor
-    (__TODO Fabien or others__: This is needed currently because the docker host's DNS server is not shared with the docker instances, but a better more generic way surely can be put in place)
- If you need more than 2 (very likely), currently you can simply modify the [docker-compose.yml](./docker-compose.yml) and add more hosts in the "extra_hosts" parameter.
+* KAFKA_ADVERTISED_HOST_NAME is needed so the Kafka component can be accessed from external servers (like the wM IS to be monitored)
+* MONITORED_WM_HOST variables are currently needed so the docker instance can route network requests to the external IS nodes to monitor. 
+  - Of course, modify the IP addresses accordingly (instead of 127.0.0.1 which is the loopback address) with the "to-be-monitored" webmethods Integration Servers IP addresses.
+  - And if you need more than 2 (very likely), currently you can simply modify the [docker-compose.yml](./docker-compose.yml) and add more hosts in the "extra_hosts" parameter.
  
+__TODO Fabien or others__: This is needed currently because the docker host's DNS server is not shared with the docker instances, but a better more generic way surely can be put in place to avoid to have to fill-in all the IS ip addresses this way.
+
  3. Start SkyProfiler and related components
 
 ```bash
@@ -65,7 +67,12 @@ NOTE: if you started the Skyprofiler server on another machine, replace localhos
  
  Default Login Credentials: admin/password1234
  
- 6. Then, go to [How it works](#how_it_works) for configurations.
+ 6. Download and install the Skyprofiler runtime IS package
+ 
+ As explained on the home page, the Skyprofiler runtime IS package must be installed on any webMethods IS server to be monitored.
+ Simply download it from the home page, and install it on all the webMethods IS server to be monitored
+ 
+ 6. Then, go to [How it works](#how_it_works) for further configurations.
 
 ## Set-up without Docker
 
