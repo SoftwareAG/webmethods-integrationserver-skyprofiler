@@ -4,7 +4,7 @@
 
 	<groupId>com.softwareag.skyprofiler</groupId>
 	<artifactId>webmethods-skyprofiler</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>SKY Profiler</name>
@@ -105,7 +105,7 @@
 	</repositories>
 
 	<build>
-		<plugins>
+        <plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -116,13 +116,52 @@
                 <version>2.5.3</version>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>copy-skyprofiler-runtime</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy file="${project.basedir}/../../dist/SKYProfiler-${project.version}.zip" tofile="${project.build.directory}/classes/static/resources/SKYProfilerRuntime.zip"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.4.14</version>
                 <configuration>
                     <imageName>${docker.images.prefix}/${project.artifactId}</imageName>
                     <newName>${docker.images.repo}/${docker.images.prefix}/${project.artifactId}</newName>
-                    <dockerDirectory>${project.basedir}</dockerDirectory>
+                    <baseImage>openjdk:8-jdk-alpine</baseImage>
+                    <maintainer>fabien.sanglier@softwareag.com</maintainer>
+                    <env>
+                        <JAVA_OPTS>""</JAVA_OPTS>
+                        <ZOOKEEPER_HOST>localhost</ZOOKEEPER_HOST>
+                        <MONGODB_HOST>localhost</MONGODB_HOST>
+                    </env>
+                    <exposes>
+                        <expose>8080</expose>
+                    </exposes>
+                    <entryPoint>["sh", "-c", "java $JAVA_OPTS \
+                        -Dkafka.zookeeper.connect=$ZOOKEEPER_HOST -Dspring.data.mongodb.host=$MONGODB_HOST \
+                        -Djava.security.egd=file:/dev/./urandom \
+                        -jar /${project.build.finalName}.jar"]</entryPoint>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
                     <forceTags>true</forceTags>
                     <serverId>docker-hub</serverId>
                     <imageTags>
