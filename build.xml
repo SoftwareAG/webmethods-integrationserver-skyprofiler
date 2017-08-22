@@ -146,14 +146,12 @@
 		
 		<exec executable="cmd" dir="${basedir}/${skyprofiler.target.dir}/SKYProfiler/pub" osfamily="windows">
 		    <arg value="/c"/>
-			<arg value="bower"/>
-			<arg value="update"/>
+			<arg value="bower update"/>
 		</exec>
 		
-		<exec executable="bash" dir="${basedir}/${skyprofiler.target.dir}/SKYProfiler/pub" osfamily="unix">
+		<exec executable="/bin/bash" dir="${basedir}/${skyprofiler.target.dir}/SKYProfiler/pub" osfamily="unix">
 		    <arg value="-c"/>
-			<arg value="bower"/>
-			<arg value="update"/>
+			<arg value="bower update"/>
 		</exec>
 		
 		<mkdir dir="${skyprofiler.target.dir}/SKYProfiler/code/jars" />
