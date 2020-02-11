@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+  app:
+    image: lanimall/webmethods-skyprofiler
+    environment:
+      ZOOKEEPER_HOST: zookeeper
+      MONGODB_HOST: db
+    ports:
+      - "8080:8080"
+    networks:
+      - skynet
+    extra_hosts:
+     - "is1:${MONITORED_WM_HOST1}"
+     - "is2:${MONITORED_WM_HOST2}"
+    depends_on:
+      - db
+      - zookeeper
+      - kafka
+  db:
+    image: library/mongo:3.4
+    volumes:
+      - $PWD/data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - skynet
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - skynet
+  kafka:
+    image: wurstmeister/kafka:0.10.2.1
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: ${KAFKA_ADVERTISED_HOST_NAME}
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - skynet
+    depends_on:
+      - zookeeper
+networks:
+  skynet:

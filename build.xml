@@ -11,12 +11,16 @@
 
     <!-- Maven task Initialization -->
     <target name="init.maven">
-	    <property name="env.MAVEN_HOME" value="${maven.home}" />
-		
-        <fail message="Property &quot;maven.home&quot; needs to be set. Set the same in build.properties or set MAVEN_HOME environment variable.">
+        <property name="mvn_home" value="${env.MAVEN_HOME}" />
+        <property name="mvn_home" value="${env.M2_HOME}" />
+        <property name="mvn_home" value="${maven.home}" />
+
+        <fail message="Path to &quot;maven_home&quot; must be set. You can set it in application build.properties or in either MAVEN_HOME or M2_HOME environment variable.">
 		    <condition>
-			    <equals arg1="${env.MAVEN_HOME}" arg2="" trim="true" />
-			</condition>
+                <and>
+                    <equals arg1="${mvn_home}" arg2="" trim="true" />
+                </and>
+            </condition>
 		</fail>
 
 		<mkdir dir="${skyprofiler.lib.dir}" />
@@ -53,7 +57,7 @@
 
     <!-- Clean SKY Profiler runtime -->
     <target name="runtime.clean" description="Cleaning SKY Profiler server and runtime projects" depends="init.maven, runtime.init">
-	    <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${env.MAVEN_HOME}" fork="true" failonerror="true">
+	    <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${mvn_home}" fork="true" failonerror="true">
 	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
 	        <arg value="clean" />
 	    </artifact:mvn>
@@ -66,7 +70,7 @@
 
     <!-- Clean SKY Profiler server -->
     <target name="server.clean" description="Cleaning SKY Profiler server and runtime projects" depends="init.maven">
-		<artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${env.MAVEN_HOME}" fork="true" failonerror="true">
+		<artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${mvn_home}" fork="true" failonerror="true">
 	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
 	        <arg value="clean" />
 	    </artifact:mvn>
@@ -82,9 +86,27 @@
 		<echo message="Cleaning completed for SKY Profiler runtime and server." />
     </target>
 
+    <!-- update pom version based on the build property version -->
+    <target name="server.version" description="Update the versions on the maven submodules" depends="init.maven">
+        <artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${mvn_home}" fork="true" failonerror="true">
+            <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
+            <jvmarg value="-DnewVersion=${skyprofiler.version}" />
+            <arg value="versions:set" />
+        </artifact:mvn>
+    </target>
+
+    <!-- update pom version based on the build property version -->
+    <target name="runtime.version" description="Update the versions on the maven submodules" depends="init.maven">
+        <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${mvn_home}" fork="true" failonerror="true">
+            <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
+            <jvmarg value="-DnewVersion=${skyprofiler.version}" />
+            <arg value="versions:set" />
+        </artifact:mvn>
+    </target>
+
     <!-- Compile and build SKY Profiler runtime -->
-    <target name="runtime.jar" description="Compiles the sources and creates SKY Profiler runtime jar" depends="runtime.clean, runtime.init">
-	    <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${env.MAVEN_HOME}" fork="true" failonerror="true">
+    <target name="runtime.jar" description="Compiles the sources and creates SKY Profiler runtime jar" depends="runtime.version, runtime.clean, runtime.init">
+	    <artifact:mvn pom="${skyprofiler.runtime.dir}/pom.xml" mavenHome="${mvn_home}" fork="true" failonerror="true">
 	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
 	        <arg value="package" />
 			<arg value="-DskipTests" />
@@ -92,12 +114,28 @@
     </target>
 
     <!-- Compile and build SKY Profiler server -->
-    <target name="server.jar" description="Compiles the sources and creates SKY Profiler server jar" depends="server.clean, server.init">
-	    <artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${env.MAVEN_HOME}" fork="true" failonerror="true">
+    <target name="server.jar" description="Compiles the sources and creates SKY Profiler server jar" depends="server.version, server.clean, server.init">
+	    <artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${mvn_home}" fork="true" failonerror="true">
 	        <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
 	        <arg value="package" />
 			<arg value="-DskipTests" />
 	    </artifact:mvn>
+    </target>
+
+    <target name="server.docker.build" description="Build the SKY Profiler docker image" depends="server.jar">
+        <artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${mvn_home}" fork="true" failonerror="true">
+            <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
+            <arg value="docker:build" />
+            <arg value="-DskipTests" />
+        </artifact:mvn>
+    </target>
+
+    <target name="server.docker.push" description="Deploy the docker image to docker-hub" depends="server.docker.build">
+        <artifact:mvn pom="${skyprofiler.server.dir}/pom.xml" mavenHome="${mvn_home}" fork="true" failonerror="true">
+            <jvmarg value="-Dmaven.multiModuleProjectDirectory" />
+            <arg value="docker:push" />
+            <arg value="-DskipTests" />
+        </artifact:mvn>
     </target>
 
 	<!-- Building ISPackage -->
@@ -108,14 +146,12 @@
 		
 		<exec executable="cmd" dir="${basedir}/${skyprofiler.target.dir}/SKYProfiler/pub" osfamily="windows">
 		    <arg value="/c"/>
-			<arg value="bower"/>
-			<arg value="update"/>
+			<arg value="bower update"/>
 		</exec>
 		
-		<exec executable="bash" dir="${basedir}/${skyprofiler.target.dir}/SKYProfiler/pub" osfamily="unix">
+		<exec executable="/bin/bash" dir="${basedir}/${skyprofiler.target.dir}/SKYProfiler/pub" osfamily="unix">
 		    <arg value="-c"/>
-			<arg value="bower"/>
-			<arg value="update"/>
+			<arg value="bower update"/>
 		</exec>
 		
 		<mkdir dir="${skyprofiler.target.dir}/SKYProfiler/code/jars" />
@@ -132,11 +168,11 @@
 		<get src="http://central.maven.org/maven2/net/java/dev/jna/jna-platform/4.4.0/jna-platform-4.4.0.jar" 
 	        dest="${skyprofiler.target.dir}/SKYProfiler/code/jars/jna-platform-4.4.0.jar" usetimestamp="true" />
 
-		<copy tofile="${skyprofiler.target.dir}/SKYProfiler/code/jars/skyprofiler.jar">
+		<copy tofile="${skyprofiler.target.dir}/SKYProfiler/code/jars/skyprofiler-${skyprofiler.version}.jar">
 			<fileset file="${skyprofiler.runtime.dir}/target/*.jar" />
 		</copy>
 
-		<zip destfile="${skyprofiler.target.dir}/SKYProfiler.zip">
+		<zip destfile="${skyprofiler.target.dir}/SKYProfiler-${skyprofiler.version}.zip">
 			<zipfileset dir="${skyprofiler.target.dir}/SKYProfiler" />
 		</zip>
   

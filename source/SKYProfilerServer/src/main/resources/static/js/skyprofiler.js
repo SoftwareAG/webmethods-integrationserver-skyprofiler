@@ -196,6 +196,11 @@
     		    });
     		});
     	}
+
+        $scope.downloadRuntime = function() {
+            var fileToDownload = '/resources/SKYProfilerRuntime.zip';
+            window.location = fileToDownload;
+        }
     }]);
 
     app.controller('serverCtrl', ['$scope', '$routeParams', '$http', '$location', 'serverDataService', 'Notification', function serverCtrl($scope, $routeParams, $http, $location, serverDataService, Notification) {
